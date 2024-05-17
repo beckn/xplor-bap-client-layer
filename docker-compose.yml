@@ -1,0 +1,11 @@
+version: "3"
+services:
+  backend:
+    container_name: implementation-layer-nest-backend
+    build: .
+    ports:
+     - 1106:3000
+    restart: always
+
+
+    

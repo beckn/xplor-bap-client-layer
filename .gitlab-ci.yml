@@ -1,0 +1,3 @@
+include:
+  - https://gitlab.thewitslab.com/api/v4/projects/448/repository/files/nestjs.yml/raw?ref=main&private_token=$Boilerplate_Pipeline&.yaml
+
