@@ -1,11 +1,13 @@
-version: "3"
+version: '3'
 services:
   backend:
     container_name: implementation-layer-nest-backend
     build: .
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+      - CORE_SERVICE_URL=${CORE_SERVICE_URL}
     ports:
-     - 1106:3000
+      - 1106:${PORT}
     restart: always
-
-
-    
