@@ -16,7 +16,7 @@ deploy:dev:
           docker-compose down
           cd /home/ubuntu &&  sudo rm -rf implementation-layer-nest-backend
         fi "
-    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://user:'$GITLAB_ACCESS_TOKEN'git@gitlab.thewitslab.com/wil-workspace/xplor/implementation-layer-nest-backend.git"
+    - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://user:'$GITLAB_ACCESS_TOKEN'git@gitlab.thewitslab.com/wil-workspace/xplor/implementation-layer-nest-backend.git "
     - sshpass -p $Xplor_Password scp .env $Xplor_Username@$Xplor_IP:/home/ubuntu/implementation-layer-nest-backend
     - sshpass -p $Xplor_Password ssh -tt $Xplor_Username@$Xplor_IP  "
         cd /home/ubuntu/implementation-layer-nest-backend && docker-compose up -d --build "
