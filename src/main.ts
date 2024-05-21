@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   // Create a Nest application instance
@@ -15,6 +15,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   // Retrieve the ConfigService to access environment variables
   const configService = app.get(ConfigService);
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   // Set a global prefix for all routes, excluding specified routes
   app.setGlobalPrefix('api', { exclude: ['/', '/health'] });

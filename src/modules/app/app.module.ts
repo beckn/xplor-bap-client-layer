@@ -6,6 +6,10 @@ import envValidation from '../../config/env/validation/env.validation';
 import configuration from '../../config/env/env.config';
 import * as Joi from 'joi';
 import { CommonModule } from 'src/common/common.module';
+import { EAuthModule } from '../e-auth/e-auth.module';
+import { StgModule } from '../stg/stg.module';
+import { WalletModule } from '../wallet/wallet.module';
+import { UserModule } from '../user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,7 +20,11 @@ import { CommonModule } from 'src/common/common.module';
         abortEarly: false,
       },
     }),
-    CommonModule,
+    { module: CommonModule, global: true },
+    EAuthModule,
+    StgModule,
+    WalletModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
