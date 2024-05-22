@@ -39,10 +39,13 @@ export class UserController {
   }
 
   // Endpoint to verify OTP
-
   @Post('/verify-otp')
-  verifyOtp(@Query() queryOtpTypeDto: QueryOtpTypeDto, @Body() verifyOtpDto: VerifyOtpDto) {
-    return this.userService.verifyOtp(queryOtpTypeDto, verifyOtpDto);
+  verifyOtp(
+    @ExtractToken() token: string,
+    @Query() queryOtpTypeDto: QueryOtpTypeDto,
+    @Body() verifyOtpDto: VerifyOtpDto,
+  ) {
+    return this.userService.verifyOtp(token, queryOtpTypeDto, verifyOtpDto);
   }
 
   @Put('/reset-mpin')
