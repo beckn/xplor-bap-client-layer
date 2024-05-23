@@ -138,6 +138,10 @@ export class InitRequestDto {
   @IsString()
   provider_id: string;
 
+  @IsOptional()
+  @IsString({ message: 'domain must be a string' })
+  domain: string;
+
   @IsString()
   transaction_id: string;
 }

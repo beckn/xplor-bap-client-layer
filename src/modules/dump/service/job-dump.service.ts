@@ -15,7 +15,7 @@ export class JobDumpService {
     return await this.dumpModel.find();
   }
 
-  async findByTransactionId(transaction_id: string, request_type: string): Promise<Job> {
+  async findBytransaction_id(transaction_id: string, request_type: string): Promise<Job> {
     return await this.dumpModel.findOne({ transaction_id, request_type });
   }
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { StgService } from './services/stg.service';
 import { SearchRequestDto } from './dto/search-request.dto';
 import { Body, Controller, Get, Injectable, Post, Req, Res } from '@nestjs/common';
@@ -5,6 +7,7 @@ import { SseConnectedMessage } from '../../common/constants/response-message';
 import { SelectRequestDto } from './dto/select-request-dto';
 import { InitRequestDto } from './dto/init-request.dto';
 import { ConfirmRequestDto } from './dto/confirm-request.dto';
+import { StatusRequestDto } from './dto/status-request.dto';
 
 @Controller({ version: '1', path: 'stg' })
 @Injectable()
@@ -19,6 +22,7 @@ export class StgController {
 
   @Post('search')
   search(@Body() searchRequestDto: SearchRequestDto) {
+    console.log('heyyyy', searchRequestDto);
     return this.stgService.search(searchRequestDto);
   }
 
@@ -35,6 +39,11 @@ export class StgController {
   @Post('confirm')
   confirm(@Body() confirmRequestDto: ConfirmRequestDto) {
     return this.stgService.confirm(confirmRequestDto);
+  }
+
+  @Post('status')
+  status(@Body() statusRequestDto: StatusRequestDto) {
+    return this.stgService.status(statusRequestDto);
   }
 
   @Post('on_search')
@@ -76,11 +85,11 @@ export class StgController {
     res.setHeader('Access-Control-Allow-Origin', '*');
     req.setTimeout(0);
     // Extract transaction ID from query parameters
-    const transactionId: string = req.query.transaction_id;
+    const transaction_id: string = req.query.transaction_id;
     // Add the client to the clientsMap
-    this.connectedClients.set(transactionId, res);
+    this.connectedClients.set(transaction_id, res);
     this.sendDataToClients(
-      transactionId,
+      transaction_id,
       {
         success: true,
         message: SseConnectedMessage,
@@ -89,16 +98,16 @@ export class StgController {
     );
     // Handle client disconnect
     req.on('close', () => {
-      this.connectedClients.delete(transactionId); // Remove the disconnected client
+      this.connectedClients.delete(transaction_id); // Remove the disconnected client
     });
   }
 
-  async sendDataToClients(transactionId: string, data: any, connectedClients: Map<string, any>): Promise<void> {
+  async sendDataToClients(transaction_id: string, data: any, connectedClients: Map<string, any>): Promise<void> {
     try {
-      if (connectedClients.has(transactionId)) {
+      if (connectedClients.has(transaction_id)) {
         // eslint-disable-next-line no-console
         console.log('sseData', `data: ${JSON.stringify(data)}`);
-        connectedClients.get(transactionId).write(`data: ${JSON.stringify(data)}\n\n`);
+        connectedClients.get(transaction_id).write(`data: ${JSON.stringify(data)}\n\n`);
       }
 
       return data;
