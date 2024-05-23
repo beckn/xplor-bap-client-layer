@@ -252,10 +252,7 @@ export class StgService {
           : domain == 'job'
           ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init')
           : domain == 'scholarship'
-          ? await this.scholarshipDumpService.findByTransactionId(
-              searchRequestDto?.context?.transaction_id,
-              'on_init',
-            )
+          ? await this.scholarshipDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init')
           : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init');
       // Dump the response into database
       const createDumpDto: CreateDumpDto = {
@@ -280,7 +277,7 @@ export class StgService {
       throw error?.response?.data;
     }
   }
-  
+
   async onStatus(
     searchRequestDto: any,
     connectedClients: Map<string, any>,
