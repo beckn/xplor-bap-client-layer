@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDumpDto } from '../dto/create-dump.dto';
-import { Dump, DumpDocument } from '../schema/dump.schema';
+import { Dump, DumpDocument } from '../schema/scholarship.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
