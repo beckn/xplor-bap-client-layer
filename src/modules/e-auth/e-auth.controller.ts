@@ -22,6 +22,7 @@ export class EAuthController {
     return this.eAuthService.getProviders(token);
   }
 
+  // Route to update user on callback
   @Get('/callback')
   kycCallbackWebHook(@Query() callBackQueryDto: CallBackQueryDto) {
     return this.eAuthService.updateUserOnCallBack(callBackQueryDto);

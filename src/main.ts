@@ -21,7 +21,7 @@ async function bootstrap() {
   });
 
   // Set a global prefix for all routes, excluding specified routes
-  app.setGlobalPrefix('api', { exclude: ['/', '/health'] });
+  app.setGlobalPrefix('api', { exclude: ['/', '/health', '/e-auth/callback'] });
 
   // Configure Swagger/OpenAPI documentation
   const config = new DocumentBuilder()
