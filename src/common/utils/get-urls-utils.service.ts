@@ -41,4 +41,5 @@ export class GetUrl extends ConfigService {
   getLanguagesForUserUrl = this.coreServiceUrl + Endpoints.getLanguagesForUserUrl;
   getDomainsUrl = this.coreServiceUrl + Endpoints.getDomainsUrl;
   getCategoriesUrl = this.coreServiceUrl + Endpoints.getCategoriesUrl;
+  updateUserOnCallBackUrl = this.coreServiceUrl + Endpoints.updateUserOnCallBackUrl;
 }

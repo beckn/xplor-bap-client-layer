@@ -31,4 +31,5 @@ export const Endpoints = {
   getLanguagesForUserUrl: '/api/v1/ai-ml/languages',
   getDomainsUrl: '/api/v1/ai-ml/domains',
   getCategoriesUrl: '/api/v1/ai-ml/categories',
+  updateUserOnCallBackUrl: '/e-auth/callback',
 };

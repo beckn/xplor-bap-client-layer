@@ -1,10 +1,11 @@
 // Import necessary decorators, services, and DTOs
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { EAuthService } from './e-auth.service';
 
 import { ExtractToken } from 'src/common/decorators/extract-token.decorator';
+import { CallBackQueryDto } from './dto/callback-query.dto';
 
 // Define the EAuthController with necessary routes and decorators
 @ApiTags('E-auth')
@@ -19,5 +20,10 @@ export class EAuthController {
   @Get()
   getProviders(@ExtractToken() token: string) {
     return this.eAuthService.getProviders(token);
+  }
+
+  @Get('/callback')
+  kycCallbackWebHook(@Query() callBackQueryDto: CallBackQueryDto) {
+    return this.eAuthService.updateUserOnCallBack(callBackQueryDto);
   }
 }
