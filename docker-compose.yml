@@ -11,7 +11,9 @@ services:
     ports:
       - 1106:${PORT}
     restart: always
-    
+    networks:
+      - xplor-network # Connects the service to the xplor-network
+      
 networks:
   xplor-network:
     external: true 
