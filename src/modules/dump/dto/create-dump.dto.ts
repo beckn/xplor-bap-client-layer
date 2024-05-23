@@ -15,6 +15,10 @@ export class CreateDumpDto {
 
   @IsString()
   @IsNotEmpty()
+  device_id: string;
+
+  @IsString()
+  @IsNotEmpty()
   request_type: string;
 
   @IsString()

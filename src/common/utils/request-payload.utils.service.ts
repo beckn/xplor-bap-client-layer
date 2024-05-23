@@ -10,7 +10,7 @@ import { StatusRequestDto } from 'src/modules/stg/dto/status-request.dto';
 export class RequestPayloadUtilsService {
   createSearchPayload(searchRequestDto: SearchRequestDto) {
     return {
-      domain: searchRequestDto.domain,
+      domain: searchRequestDto.context.domain,
       context: {
         action: stgAction.search,
         transaction_id: searchRequestDto.context.transaction_id,
@@ -21,7 +21,7 @@ export class RequestPayloadUtilsService {
         intent: {
           item: {
             descriptor: {
-              name: searchRequestDto.message.searchQuery,
+              name: searchRequestDto?.message?.searchQuery,
             },
           },
         },

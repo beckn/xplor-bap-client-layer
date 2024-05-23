@@ -3,8 +3,8 @@ import { Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 @Schema({ timestamps: true })
-export class Course extends Document {
-  @Prop({ default: () => `course_${uuidv4()}` })
+export class Scholarship extends Document {
+  @Prop({ default: () => `scholarship_${uuidv4()}` })
   _id: string;
   @Prop({ required: true })
   transaction_id: string;
@@ -27,6 +27,6 @@ export class Course extends Document {
   @Prop({ type: Object, required: true })
   message: Record<string, any>;
 }
-export const CourseModel = Course.name;
-export type CourseDocument = Course & Document;
-export const CourseSchema = SchemaFactory.createForClass(Course);
+export const ScholarshipModel = Scholarship.name;
+export type ScholarshipDocument = Scholarship & Document;
+export const ScholarshipSchema = SchemaFactory.createForClass(Scholarship);

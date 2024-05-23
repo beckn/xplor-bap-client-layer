@@ -3,14 +3,14 @@ import { Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 @Schema({ timestamps: true })
-export class Dump extends Document {
-  @Prop({ default: () => `dump_${uuidv4()}` })
+export class Job extends Document {
+  @Prop({ default: () => `job_${uuidv4()}` })
   _id: string;
   @Prop({ required: true })
   transaction_id: string;
 
-  @Prop({ type: String, optional: true })
-  domain: string | Array<string>;
+  @Prop({ required: true })
+  device_id: string;
 
   @Prop({ type: Array<string> })
   domains: Array<string>;
@@ -27,6 +27,6 @@ export class Dump extends Document {
   @Prop({ type: Object, required: true })
   message: Record<string, any>;
 }
-export const DumpModel = Dump.name;
-export type DumpDocument = Dump & Document;
-export const DumpSchema = SchemaFactory.createForClass(Dump);
+export const JobModel = Job.name;
+export type JobDocument = Job & Document;
+export const JobSchema = SchemaFactory.createForClass(Job);

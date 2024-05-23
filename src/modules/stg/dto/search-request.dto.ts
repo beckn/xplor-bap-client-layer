@@ -8,6 +8,10 @@ export class ContextDto {
   @IsOptional()
   @IsString({ message: 'Bap Uri must be a string' })
   bap_uri: string;
+
+  @IsNotEmpty({ message: 'Domain should not be empty' })
+  @IsArray({ message: ' Domain must be string' })
+  domain: Array<string>;
 }
 
 export class MessageDto {
@@ -15,10 +19,6 @@ export class MessageDto {
 }
 
 export class SearchRequestDto {
-  @IsNotEmpty({ message: 'Domain should not be empty' })
-  @IsArray({ message: ' Domain must be string' })
-  domain: Array<string>;
-
   @IsOptional()
   deviceId?: string;
 

@@ -3,7 +3,7 @@ stages:
 
 deploy:dev:
   stage: dev
-
+  when: manual
   tags:
     - gcp
 

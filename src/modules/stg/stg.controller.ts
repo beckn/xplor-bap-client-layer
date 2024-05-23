@@ -49,6 +49,30 @@ export class StgController {
     return this.stgService.onSearch(searchResponse, this.connectedClients, this.sendDataToClients);
   }
 
+  @Post('on_select')
+  onSelect(@Body() searchResponse: any) {
+    // Bind the context of sendDataToClients to this instance
+    return this.stgService.onSelect(searchResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_init')
+  onInit(@Body() searchResponse: any) {
+    // Bind the context of sendDataToClients to this instance
+    return this.stgService.onInit(searchResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_confirm')
+  onConfirm(@Body() searchResponse: any) {
+    // Bind the context of sendDataToClients to this instance
+    return this.stgService.onConfirm(searchResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_status')
+  onStatus(@Body() searchResponse: any) {
+    // Bind the context of sendDataToClients to this instance
+    return this.stgService.onStatus(searchResponse, this.connectedClients, this.sendDataToClients);
+  }
+
   @Get('sse')
   async sse(@Req() req: any, @Res() res: any): Promise<void> {
     // Set headers for SSE

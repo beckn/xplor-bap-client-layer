@@ -15,7 +15,7 @@ export class SelectRequestDto {
 
   @IsOptional()
   @IsString()
-  fulfillment_id: string;
+  fulfillment_id?: string;
 
   @IsNotEmpty()
   @IsString()
