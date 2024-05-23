@@ -52,14 +52,12 @@ export class StgController {
   @Post('on_select')
   onSelect(@Body() selectResponse: any) {
     try {
-      console.log('searchResponse', selectResponse)
       // Bind the context of sendDataToClients to this instance
       this.stgService.onSelect(selectResponse, this.connectedClients, this.sendDataToClients);
-      return true
+      return true;
     } catch (error) {
-      console.log('error', error)
+      throw error?.message;
     }
-   
   }
 
   @Post('on_init')
