@@ -5,10 +5,6 @@ export class ContextDto {
   @IsString({ message: 'Transaction ID must be a string' })
   transaction_id: string;
 
-  @IsNotEmpty({ message: 'Message ID is required' })
-  @IsString({ message: 'Message ID must be a string' })
-  message_id: string;
-
   @IsOptional()
   @IsString({ message: 'Bap Uri must be a string' })
   bap_uri: string;
@@ -29,6 +25,7 @@ export class SearchRequestDto {
   @IsNotEmpty({ message: 'Context is required' })
   @IsObject({ message: 'Context must be a object' })
   context: ContextDto;
+
   @IsNotEmpty({ message: 'Message is required' })
   @IsObject({ message: 'Message must be a object' })
   message: MessageDto;

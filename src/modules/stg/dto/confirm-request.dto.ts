@@ -71,6 +71,9 @@ export class ConfirmRequestDto {
   transaction_id: string;
 
   @IsString()
+  domain: string;
+
+  @IsString()
   provider_id: string;
 
   @ValidateNested()

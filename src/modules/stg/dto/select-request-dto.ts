@@ -1,11 +1,23 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SelectRequestDto {
   @IsArray()
   @IsString({ each: true })
-  itemsId: string[];
+  items_id: string[];
+
+  @IsOptional()
+  @IsString()
+  domain: string;
 
   @IsNotEmpty()
   @IsString()
-  providerId: string;
+  provider_id: string;
+
+  @IsOptional()
+  @IsString()
+  fulfillment_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  transaction_id: string;
 }
