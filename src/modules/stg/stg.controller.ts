@@ -42,7 +42,6 @@ export class StgController {
     // Bind the context of sendDataToClients to this instance
     return this.stgService.onSearch(searchResponse, this.connectedClients, this.sendDataToClients);
   }
-
   @Get('sse')
   async sse(@Req() req: any, @Res() res: any): Promise<void> {
     // Set headers for SSE
