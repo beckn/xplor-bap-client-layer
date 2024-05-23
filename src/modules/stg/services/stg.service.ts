@@ -69,9 +69,11 @@ export class StgService {
   async select(selectRequestDto: SelectRequestDto) {
     try {
       const selectPayload = this.payloadService.createSelectPayload(selectRequestDto);
-      const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgSelectUrl, selectPayload))?.data;
-      return searchResponse;
+      const selectResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgSelectUrl, selectPayload))?.data;
+      console.log(selectResponse,"selectResponse")
+      return selectResponse;
     } catch (error) {
+      console.log(error?.message)
       throw error?.response?.data;
     }
   }
