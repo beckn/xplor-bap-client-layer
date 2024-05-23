@@ -10,6 +10,7 @@ import { EAuthModule } from '../e-auth/e-auth.module';
 import { StgModule } from '../stg/stg.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { UserModule } from '../user/user.module';
+import { AiMlModule } from '../ai-ml/ai-ml.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +26,7 @@ import { UserModule } from '../user/user.module';
     StgModule,
     WalletModule,
     UserModule,
+    AiMlModule,
   ],
   controllers: [AppController],
   providers: [AppService],

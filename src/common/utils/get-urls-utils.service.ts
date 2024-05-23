@@ -36,4 +36,9 @@ export class GetUrl extends ConfigService {
   logOutUserUrl = this.coreServiceUrl + Endpoints.logOutUserUrl;
   updateUserLanguagePreferenceUrl = this.coreServiceUrl + Endpoints.updateUserLanguagePreferenceUrl;
   getDevicePreferenceUrl = this.coreServiceUrl + Endpoints.getDevicePreferenceUrl;
+  getSupportedLanguageUrl = this.coreServiceUrl + Endpoints.getSupportedLanguageUrl;
+  getTranslateLanguageUrl = this.coreServiceUrl + Endpoints.getTranslateLanguageUrl;
+  getLanguagesForUserUrl = this.coreServiceUrl + Endpoints.getLanguagesForUserUrl;
+  getDomainsUrl = this.coreServiceUrl + Endpoints.getDomainsUrl;
+  getCategoriesUrl = this.coreServiceUrl + Endpoints.getCategoriesUrl;
 }
