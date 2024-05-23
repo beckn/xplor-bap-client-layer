@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 
 import { SearchRequestDto } from '../dto/search-request.dto';
 import { GetUrl } from 'src/common/utils/get-urls-utils.service';
+import { SelectRequestDto } from '../dto/select-request-dto';
+import { InitRequestDto } from '../dto/init-request.dto';
+import { ConfirmRequestDto } from '../dto/confirm-request.dto';
 
 @Injectable()
 export class StgService {
@@ -27,6 +30,45 @@ export class StgService {
       throw error?.response?.data;
     }
   }
+
+  async select(selectRequestDto: SelectRequestDto) {
+    try {
+      const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgSelectUrl, selectRequestDto))
+        ?.data;
+      return searchResponse;
+    } catch (error) {
+      throw error?.response?.data;
+    }
+  }
+
+  async init(initRequestDto: InitRequestDto) {
+    try {
+      const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgInitUrl, initRequestDto))?.data;
+      return searchResponse;
+    } catch (error) {
+      throw error?.response?.data;
+    }
+  }
+
+  async confirm(confirmRequestDto: ConfirmRequestDto) {
+    try {
+      const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgConfirmUrl, confirmRequestDto))
+        ?.data;
+      return searchResponse;
+    } catch (error) {
+      throw error?.response?.data;
+    }
+  }
+
+  // async status(statusRequestDto: StatusRequestDto) {
+  //   try {
+  //     const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgStatusUrl, statusRequestDto))
+  //       ?.data;
+  //     return searchResponse;
+  //   } catch (error) {
+  //     throw error?.response?.data;
+  //   }
+  // }
 
   async onSearch(
     searchRequestDto: any,

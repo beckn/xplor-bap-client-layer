@@ -14,6 +14,12 @@ export class GetUrl extends ConfigService {
   coreServiceUrl = this.get('coreServiceUrl');
   getProvidersUrl = this.coreServiceUrl + Endpoints.getProviderUrl;
   getStgSearchUrl = this.coreServiceUrl + Endpoints.getStgSearchUrl;
+  getStgSelectUrl = this.coreServiceUrl + Endpoints.getStgSelectUrl;
+
+  getStgInitUrl = this.coreServiceUrl + Endpoints.getStgInitUrl;
+  getStgConfirmUrl = this.coreServiceUrl + Endpoints.getStgConfirmUrl;
+  getStgStatusUrl = this.coreServiceUrl + Endpoints.getStgStatusUrl;
+
   getWalletUrl = this.coreServiceUrl + Endpoints.getWalletUrl;
   getWalletVcsUrl = this.coreServiceUrl + Endpoints.getWalletVcsUrl;
   getWalletVcUrl = this.coreServiceUrl + Endpoints.getWalletVcUrl;

@@ -2,6 +2,9 @@ import { StgService } from './services/stg.service';
 import { SearchRequestDto } from './dto/search-request.dto';
 import { Body, Controller, Get, Injectable, Post, Req, Res } from '@nestjs/common';
 import { SseConnectedMessage } from '../../common/constants/response-message';
+import { SelectRequestDto } from './dto/select-request-dto';
+import { InitRequestDto } from './dto/init-request.dto';
+import { ConfirmRequestDto } from './dto/confirm-request.dto';
 
 @Controller({ version: '1', path: 'stg' })
 @Injectable()
@@ -17,6 +20,21 @@ export class StgController {
   @Post('search')
   search(@Body() searchRequestDto: SearchRequestDto) {
     return this.stgService.search(searchRequestDto);
+  }
+
+  @Post('select')
+  select(@Body() selectRequestDto: SelectRequestDto) {
+    return this.stgService.select(selectRequestDto);
+  }
+
+  @Post('init')
+  init(@Body() initRequestDto: InitRequestDto) {
+    return this.stgService.init(initRequestDto);
+  }
+
+  @Post('confirm')
+  confirm(@Body() confirmRequestDto: ConfirmRequestDto) {
+    return this.stgService.confirm(confirmRequestDto);
   }
 
   @Post('on_search')

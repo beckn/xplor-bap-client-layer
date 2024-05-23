@@ -4,6 +4,11 @@
 export const Endpoints = {
   getProviderUrl: '/api/v1/e-auth',
   getStgSearchUrl: '/api/v1/stg/search',
+  getStgSelectUrl: '/api/v1/stg/select',
+  getStgInitUrl: '/api/v1/stg/init',
+  getStgConfirmUrl: '/api/v1/stg/confirm',
+  getStgStatusUrl: '/api/v1/stg/status',
+
   getWalletUrl: '/api/v1/wallet',
   getWalletVcsUrl: '/api/v1/wallet/vcs',
   getWalletVcUrl: '/api/v1/wallet/vc',
