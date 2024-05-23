@@ -149,10 +149,13 @@ export class UserService {
     }
   }
   // Method to verify OTP
-  async verifyOtp(queryOtpTypeDto: QueryOtpTypeDto, verifyOtpDto: VerifyOtpDto): Promise<any> {
+  async verifyOtp(token: string, queryOtpTypeDto: QueryOtpTypeDto, verifyOtpDto: VerifyOtpDto): Promise<any> {
     try {
       return (
-        await this.httpService.axiosRef.post(this.getUrl.getUserVerifyOtpUrl, verifyOtpDto, { params: queryOtpTypeDto })
+        await this.httpService.axiosRef.post(this.getUrl.getUserVerifyOtpUrl, verifyOtpDto, {
+          params: queryOtpTypeDto,
+          headers: { Authorization: token },
+        })
       )?.data;
     } catch (error) {
       this.logger.error(USER_ERROR_MESSAGES.VERIFY_OTP, error);

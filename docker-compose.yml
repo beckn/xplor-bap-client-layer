@@ -11,3 +11,7 @@ services:
     ports:
       - 1106:${PORT}
     restart: always
+    
+networks:
+  xplor-network:
+    external: true 
