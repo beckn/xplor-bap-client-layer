@@ -3,12 +3,17 @@ import { AppModule } from './modules/app/app.module';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { join } from 'path';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   // Create a Nest application instance
-  const app = await NestFactory.create(AppModule, { cors: true });
+  // const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('ejs');
+
   // Use Helmet to secure the application by setting various HTTP headers
   app.use(helmet());
   // Use the built-in ValidationPipe for class-based validation
@@ -21,7 +26,7 @@ async function bootstrap() {
   });
 
   // Set a global prefix for all routes, excluding specified routes
-  app.setGlobalPrefix('api', { exclude: ['/', '/health', '/e-auth/callback'] });
+  app.setGlobalPrefix('api', { exclude: ['/', '/health', '/e-auth/callback', '/applicationForm'] });
 
   // Configure Swagger/OpenAPI documentation
   const config = new DocumentBuilder()
