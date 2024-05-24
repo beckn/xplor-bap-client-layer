@@ -11,6 +11,7 @@ import { StgModule } from '../stg/stg.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { UserModule } from '../user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AiMlModule } from '../ai-ml/ai-ml.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +34,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     StgModule,
     WalletModule,
     UserModule,
+    AiMlModule,
   ],
   controllers: [AppController],
   providers: [AppService],
