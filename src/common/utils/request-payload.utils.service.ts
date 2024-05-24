@@ -38,15 +38,15 @@ export class RequestPayloadUtilsService {
   createSelectPayload(selectRequestDto: SelectRequestDto) {
     return {
       context: {
-        transaction_id: selectRequestDto.transaction_id,
-        domain: selectRequestDto.domain,
+        transaction_id: selectRequestDto.context.transaction_id,
+        domain: selectRequestDto.context.domain,
         message_id: uuidv4(),
       },
       message: {
         order: {
-          items_id: selectRequestDto.items_id,
-          provider_id: selectRequestDto.provider_id,
-          fulfillment_id: selectRequestDto?.fulfillment_id,
+          items_id: selectRequestDto.message.order.items_id,
+          provider_id: selectRequestDto.message.order.provider_id,
+          fulfillment_id: selectRequestDto?.message.order.fulfillment_id,
         },
       },
     };
