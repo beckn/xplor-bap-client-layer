@@ -176,7 +176,6 @@ export class StgService {
       // Dump data to database
 
       console.log('onSelectRequestDto', searchRequestDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
           ? 'course'
@@ -185,7 +184,8 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
-      // const message = searchRequestDto?.data[domain]?.message;
+          const message = searchRequestDto?.data[domain]?.message;
+
       const selectRequestDetails =
         domain == 'course'
           ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search')
@@ -198,15 +198,19 @@ export class StgService {
             )
           : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search');
       // Dump the response into database
+    
+
+
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,
         transaction_id: searchRequestDto?.context?.transaction_id,
         domain: domain,
         message_id: searchRequestDto?.context?.message_id,
-        device_id: selectRequestDetails?.context?.device_id,
+        device_id: selectRequestDetails?.device_id,
         request_type: searchRequestDto?.context?.action,
-        message: searchRequestDto?.message,
+        message: message,
       };
+
       domain == 'course'
         ? await this.courseDumpService.create(createDumpDto)
         : domain == 'job'
@@ -237,6 +241,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
+          const message = searchRequestDto?.data[domain]?.message;
 
       const selectRequestDetails =
         domain == 'course'
@@ -255,9 +260,9 @@ export class StgService {
         transaction_id: searchRequestDto?.context?.transaction_id,
         domain: domain,
         message_id: searchRequestDto?.context?.message_id,
-        device_id: selectRequestDetails?.context?.device_id,
+        device_id: selectRequestDetails?.device_id,
         request_type: searchRequestDto?.context?.action,
-        message: searchRequestDto?.message,
+        message: message,
       };
       console.log(createDumpDto, 'dumping on init');
       domain == 'course'
@@ -289,7 +294,9 @@ export class StgService {
           ? 'job'
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
-          : 'retail';
+              : 'retail';
+      const message = searchRequestDto?.data[domain]?.message;
+      
 
       const selectRequestDetails =
         domain == 'course'
@@ -305,9 +312,9 @@ export class StgService {
         transaction_id: searchRequestDto?.context?.transaction_id,
         domain: domain,
         message_id: searchRequestDto?.context?.message_id,
-        device_id: selectRequestDetails?.context?.device_id,
+        device_id: selectRequestDetails?.device_id,
         request_type: searchRequestDto?.context?.action,
-        message: searchRequestDto?.message,
+        message: message,
       };
       domain == 'course'
         ? await this.courseDumpService.create(createDumpDto)
@@ -338,6 +345,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
+          const message = searchRequestDto?.data[domain]?.message;
 
       const selectRequestDetails =
         domain == 'course'
@@ -356,9 +364,9 @@ export class StgService {
         transaction_id: searchRequestDto?.context?.transaction_id,
         domain: domain,
         message_id: searchRequestDto?.context?.message_id,
-        device_id: selectRequestDetails?.context?.device_id,
+        device_id: selectRequestDetails?.device_id,
         request_type: searchRequestDto?.context?.action,
-        message: searchRequestDto?.message,
+        message: message,
       };
       domain == 'course'
         ? await this.courseDumpService.create(createDumpDto)
