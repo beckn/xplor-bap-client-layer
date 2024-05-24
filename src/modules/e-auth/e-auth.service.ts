@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { GetUrl } from '../../common/utils/get-urls-utils.service';
 import { IProvider } from './interfaces/provider.interface';
 import { EAUTH_ERROR_MESSAGES } from '../../common/constants/error-message';
+import { CallBackQueryDto } from './dto/callback-query.dto';
 
 // Define the EAuthService with necessary methods
 @Injectable()
@@ -28,6 +29,16 @@ export class EAuthService {
     } catch (error) {
       this.logger.error(EAUTH_ERROR_MESSAGES.GET_PROVIDERS, error);
       throw error;
+    }
+  }
+
+  async updateUserOnCallBack(callBackQueryDto: CallBackQueryDto) {
+    try {
+      return (await this.httpService.axiosRef.get(this.getUrl.updateUserOnCallBackUrl, { params: callBackQueryDto }))
+        ?.data;
+    } catch (error) {
+      this.logger.error(EAUTH_ERROR_MESSAGES.GET_USER_DETAILS, error);
+      throw error?.response?.data;
     }
   }
 }

@@ -31,4 +31,10 @@ export const Endpoints = {
   logOutUserUrl: '/api/v1/user/logout',
   updateUserLanguagePreferenceUrl: '/api/v1/user/language-preference',
   getDevicePreferenceUrl: '/api/v1/user/device-preference',
+  getSupportedLanguageUrl: '/api/v1/ai-ml/supported-languages',
+  getTranslateLanguageUrl: '/api/v1/ai-ml/translate',
+  getLanguagesForUserUrl: '/api/v1/ai-ml/languages',
+  getDomainsUrl: '/api/v1/ai-ml/domains',
+  getCategoriesUrl: '/api/v1/ai-ml/categories',
+  updateUserOnCallBackUrl: '/e-auth/callback',
 };

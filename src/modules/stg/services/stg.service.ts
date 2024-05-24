@@ -105,6 +105,7 @@ export class StgService {
       const searchResponse = (await this.httpService.axiosRef.post(this.getUrl.getStgStatusUrl, statusPayload))?.data;
       return searchResponse;
     } catch (error) {
+      console.log('error', JSON.stringify(error));
       throw error?.response?.data;
     }
   }
@@ -358,6 +359,8 @@ export class StgService {
       sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
+      console.log('error', JSON.stringify(error));
+
       throw error?.response?.data;
     }
   }
