@@ -172,6 +172,7 @@ export class StgService {
     sendDataToClients: (transaction_id: string, data: any, connectedClients: Map<string, any>) => void,
   ) {
     try {
+      console.log('connectedClients in onSelect', connectedClients);
       sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       // Dump data to database
 
