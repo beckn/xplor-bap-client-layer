@@ -184,7 +184,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
-          const message = searchRequestDto?.data[domain]?.message;
+      const message = searchRequestDto?.data[domain]?.message;
 
       const selectRequestDetails =
         domain == 'course'
@@ -198,8 +198,6 @@ export class StgService {
             )
           : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search');
       // Dump the response into database
-    
-
 
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,
@@ -241,7 +239,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
-          const message = searchRequestDto?.data[domain]?.message;
+      const message = searchRequestDto?.data[domain]?.message;
 
       const selectRequestDetails =
         domain == 'course'
@@ -294,9 +292,8 @@ export class StgService {
           ? 'job'
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
-              : 'retail';
+          : 'retail';
       const message = searchRequestDto?.data[domain]?.message;
-      
 
       const selectRequestDetails =
         domain == 'course'
@@ -345,7 +342,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
-          const message = searchRequestDto?.data[domain]?.message;
+      const message = searchRequestDto?.data[domain]?.message;
 
       const selectRequestDetails =
         domain == 'course'
