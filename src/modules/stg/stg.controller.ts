@@ -88,6 +88,7 @@ export class StgController {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.flushHeaders();
     req.setTimeout(0);
     // Extract transaction ID from query parameters
     const transaction_id: string = req.query.transaction_id;
@@ -103,6 +104,7 @@ export class StgController {
     );
     // Handle client disconnect
     req.on('close', () => {
+      this.connectedClients.get(transaction_id).end();
       this.connectedClients.delete(transaction_id); // Remove the disconnected client
     });
   }
