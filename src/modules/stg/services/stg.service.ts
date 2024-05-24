@@ -185,7 +185,7 @@ export class StgService {
           : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
           ? 'scholarship'
           : 'retail';
-
+      // const message = searchRequestDto?.data[domain]?.message;
       const selectRequestDetails =
         domain == 'course'
           ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search')

@@ -118,8 +118,8 @@ export class StgController {
 
       return data;
     } catch (error) {
-      // console.log('error', error);
-      return error;
+      console.log('error', error);
+      throw error;
     }
   }
 }
