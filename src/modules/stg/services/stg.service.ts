@@ -83,10 +83,12 @@ export class StgService {
 
   async init(initRequestDto: InitRequestDto) {
     try {
+      console.log(initRequestDto)
       const initPayload = this.payloadService.createInitPayload(initRequestDto);
       const searchResponse = await this.httpService.post(this.getUrl.getStgInitUrl, initPayload);
       return searchResponse;
     } catch (error) {
+      console.log('error', error)
       throw error?.response;
     }
   }

@@ -55,18 +55,18 @@ export class RequestPayloadUtilsService {
   createInitPayload(initRequestDto: InitRequestDto) {
     return {
       context: {
-        transaction_id: initRequestDto.transaction_id,
-        domain: initRequestDto.domain,
+        transaction_id: initRequestDto?.context?.transaction_id,
+        domain: initRequestDto?.context?.domain,
         message_id: uuidv4(),
         ttl: 'PT10M',
       },
       message: {
         order: {
-          items_id: initRequestDto.items_id,
-          provider_id: initRequestDto.provider_id,
-          billing: { ...initRequestDto.billing, id: uuidv4() },
+          items_id: initRequestDto?.message?.order?.items_id,
+          provider_id: initRequestDto?.message?.order?.provider_id,
+          billing: initRequestDto?.message?.order?.billing,
+          fulfillment: initRequestDto?.message?.order?.fulfillments,
         },
-        fulfillment: { ...initRequestDto.fulfillments, id: uuidv4() },
       },
     };
   }
