@@ -57,8 +57,8 @@ export class RequestPayloadUtilsService {
       context: {
         transaction_id: initRequestDto.transaction_id,
         domain: initRequestDto.domain,
-            message_id: uuidv4(),
-        ttl:"PT10M"
+        message_id: uuidv4(),
+        ttl: 'PT10M',
       },
       message: {
         order: {

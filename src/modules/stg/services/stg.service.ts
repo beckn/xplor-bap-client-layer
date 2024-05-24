@@ -172,7 +172,7 @@ export class StgService {
     try {
       // Dump data to database
 
-      console.log('onSelectRequestDto', searchRequestDto)
+      console.log('onSelectRequestDto', searchRequestDto);
       sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
@@ -211,7 +211,7 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-   
+
       return searchRequestDto;
     } catch (error) {
       throw error?.response;

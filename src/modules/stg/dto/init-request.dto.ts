@@ -130,7 +130,7 @@ export class InitRequestDto {
   billing: BillingDto;
 
   @ArrayNotEmpty({ message: 'Fulfillments cannot be empty' })
-  @ValidateNested({each:true})
+  @ValidateNested({ each: true })
   @Type(() => Fulfillment)
   fulfillments: Fulfillment[];
 
