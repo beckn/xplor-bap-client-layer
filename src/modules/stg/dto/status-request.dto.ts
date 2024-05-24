@@ -24,4 +24,3 @@ export class StatusRequestDto {
   @IsObject({ message: 'Message must be a object' })
   message: MessageDto;
 }
-

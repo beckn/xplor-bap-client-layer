@@ -83,12 +83,12 @@ export class StgService {
 
   async init(initRequestDto: InitRequestDto) {
     try {
-      console.log(initRequestDto)
+      console.log(initRequestDto);
       const initPayload = this.payloadService.createInitPayload(initRequestDto);
       const searchResponse = await this.httpService.post(this.getUrl.getStgInitUrl, initPayload);
       return searchResponse;
     } catch (error) {
-      console.log('error', error)
+      console.log('error', error);
       throw error?.response;
     }
   }
@@ -228,7 +228,7 @@ export class StgService {
   ) {
     try {
       sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
-            // Dump data to database
+      // Dump data to database
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
           ? 'course'
