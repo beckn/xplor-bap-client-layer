@@ -97,6 +97,7 @@ export class StgService {
       const searchResponse = await this.httpService.post(this.getUrl.getStgConfirmUrl, confirmPayload);
       return searchResponse;
     } catch (error) {
+      console.log('error', error);
       throw error?.response;
     }
   }
@@ -119,8 +120,8 @@ export class StgService {
   ) {
     try {
       console.log('onSearchResponse', JSON.stringify(searchRequestDto));
+      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       // Dump data to database
-      console.log('searchRequestDto', JSON.stringify(searchRequestDto.data));
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
           ? 'course'
@@ -157,7 +158,6 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
       throw error?.response;
@@ -170,6 +170,7 @@ export class StgService {
     sendDataToClients: (transaction_id: string, data: any, connectedClients: Map<string, any>) => void,
   ) {
     try {
+      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       // Dump data to database
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
@@ -208,7 +209,6 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
       throw error?.response;
@@ -221,7 +221,8 @@ export class StgService {
     sendDataToClients: (transaction_id: string, data: any, connectedClients: Map<string, any>) => void,
   ) {
     try {
-      // Dump data to database
+      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
+            // Dump data to database
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
           ? 'course'
@@ -260,7 +261,6 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
       throw error?.response;
@@ -273,6 +273,8 @@ export class StgService {
     sendDataToClients: (transaction_id: string, data: any, connectedClients: Map<string, any>) => void,
   ) {
     try {
+      console.log('onConfirmReceived', searchRequestDto);
+      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       // Dump data to database
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
@@ -308,7 +310,6 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
       throw error?.response;
@@ -321,6 +322,7 @@ export class StgService {
     sendDataToClients: (transaction_id: string, data: any, connectedClients: Map<string, any>) => void,
   ) {
     try {
+      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       // Dump data to database
       const domain =
         searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
@@ -359,7 +361,6 @@ export class StgService {
         : domain == 'scholarship'
         ? await this.scholarshipDumpService.create(createDumpDto)
         : await this.retailDumpService.create(createDumpDto);
-      sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
       throw error?.response?.data;
