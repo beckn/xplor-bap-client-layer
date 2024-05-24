@@ -57,15 +57,16 @@ export class RequestPayloadUtilsService {
       context: {
         transaction_id: initRequestDto.transaction_id,
         domain: initRequestDto.domain,
-        message_id: uuidv4(),
+            message_id: uuidv4(),
+        ttl:"PT10M"
       },
       message: {
         order: {
-          items_id: initRequestDto.transaction_id,
+          items_id: initRequestDto.items_id,
           provider_id: initRequestDto.provider_id,
           billing: { ...initRequestDto.billing, id: uuidv4() },
         },
-        fulfillments: { ...initRequestDto.fulfillments, id: uuidv4() },
+        fulfillment: { ...initRequestDto.fulfillments, id: uuidv4() },
       },
     };
   }

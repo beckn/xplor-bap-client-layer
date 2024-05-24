@@ -22,13 +22,15 @@ class BillingDto {
   @IsString({ message: 'Address must be a string' })
   address: string;
 
+  @IsOptional()
   @IsNotEmpty({ message: 'Gender is required' })
   @IsString({ message: 'Gender must be a string' })
-  gender: string;
+  gender?: string;
 
+  @IsOptional()
   @IsNotEmpty({ message: 'Age is required' })
   @IsString({ message: 'Age must be a string' })
-  age: string;
+  age?: string;
 }
 
 class Contact {
@@ -127,9 +129,10 @@ export class InitRequestDto {
   @Type(() => BillingDto)
   billing: BillingDto;
 
-  @ValidateNested()
-  @Type(() => FulfillmentsDto)
-  fulfillments: FulfillmentsDto;
+  @ArrayNotEmpty({ message: 'Fulfillments cannot be empty' })
+  @ValidateNested({each:true})
+  @Type(() => Fulfillment)
+  fulfillments: Fulfillment[];
 
   @IsArray()
   @IsString({ each: true })
