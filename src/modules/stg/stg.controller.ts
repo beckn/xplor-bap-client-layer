@@ -115,7 +115,8 @@ export class StgController {
       if (connectedClients.has(transaction_id)) {
         // eslint-disable-next-line no-console
         console.log('sseData', `data: ${JSON.stringify(data)}`);
-        connectedClients.get(transaction_id).write(`data: ${JSON.stringify(data)}\n\n`);
+        console.log('connectedClients.get(transaction_id)', connectedClients.get(transaction_id));
+        connectedClients.get(transaction_id)?.write(`data: ${JSON.stringify(data)}\n\n`);
       }
 
       return data;
