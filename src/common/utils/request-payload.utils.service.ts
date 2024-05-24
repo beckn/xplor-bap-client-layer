@@ -74,18 +74,18 @@ export class RequestPayloadUtilsService {
   createConfirmPayload(confirmRequestDto: ConfirmRequestDto) {
     return {
       context: {
-        transaction_id: confirmRequestDto.transaction_id,
-        domain: confirmRequestDto.domain ? confirmRequestDto.domain : 'scholarship',
+        transaction_id: confirmRequestDto.context.transaction_id,
+        domain: confirmRequestDto.context.domain ? confirmRequestDto.context.domain : 'scholarship',
         message_id: uuidv4(),
       },
       message: {
         order: {
-          items_id: confirmRequestDto.items_id,
-          provider_id: confirmRequestDto.provider_id,
-          billing: { ...confirmRequestDto.billing, id: uuidv4() },
-          fulfillments: { ...confirmRequestDto.fulfillments, id: uuidv4() },
+          items_id: confirmRequestDto.message.order.items_id,
+          provider_id: confirmRequestDto.message.order.provider_id,
+          billing: { ...confirmRequestDto.message.order.billing, id: uuidv4() },
+          fulfillments: { ...confirmRequestDto.message.order.fulfillments, id: uuidv4() },
           payments:
-            confirmRequestDto.domain === 'scholarship'
+            confirmRequestDto.context.domain === 'scholarship'
               ? [
                   {
                     params: {
@@ -111,13 +111,14 @@ export class RequestPayloadUtilsService {
   createStatusPayload(confirmRequestDto: StatusRequestDto) {
     return {
       context: {
-        transaction_id: confirmRequestDto.transaction_id,
-        domain: confirmRequestDto.domain ? confirmRequestDto.domain : 'scholarship',
+        transaction_id: confirmRequestDto.context.transaction_id,
+        domain: confirmRequestDto.context.domain ? confirmRequestDto.context.domain : 'scholarship',
         message_id: uuidv4(),
+        ttl: 'PT10M',
       },
       message: {
         order: {
-          id: confirmRequestDto.order_id,
+          id: confirmRequestDto.message.order_id,
         },
       },
     };
