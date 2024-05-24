@@ -15,7 +15,7 @@ export class RetailDumpService {
     return await this.dumpModel.find();
   }
 
-  async findBytransaction_id(transaction_id: string, request_type: string): Promise<Retail> {
+  async findByTransactionId(transaction_id: string, request_type: string): Promise<Retail> {
     return await this.dumpModel.findOne({ transaction_id, request_type });
   }
 

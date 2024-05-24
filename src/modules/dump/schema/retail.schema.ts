@@ -9,7 +9,7 @@ export class Retail extends Document {
   @Prop({ required: true })
   transaction_id: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   device_id: string;
 
   @Prop({ type: Array<string> })

@@ -18,7 +18,6 @@ export class SearchRequestDto {
   @IsNotEmpty({ message: 'Domain should not be empty' })
   @IsArray({ message: ' Domain must be string' })
   domain: Array<string>;
-
   @IsOptional()
   deviceId?: string;
 

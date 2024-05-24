@@ -38,12 +38,32 @@ export class StgService {
   async search(searchRequestDto: SearchRequestDto) {
     try {
       const searchPayload = this.payloadService.createSearchPayload(searchRequestDto);
-      console.log('searchPayload', searchPayload);
+      searchRequestDto?.domain?.forEach(async (domain) => {
+        const createDumpDto: CreateDumpDto = {
+          context: searchPayload?.context,
+          transaction_id: searchPayload?.context?.transaction_id,
+          domain: domain,
+          message_id: searchPayload?.context?.message_id,
+          device_id: searchRequestDto?.deviceId,
+          request_type: 'search',
+          message: searchRequestDto?.message,
+        };
+
+        // const dump =
+        domain == 'course'
+          ? await this.courseDumpService.create(createDumpDto)
+          : domain == 'job'
+          ? await this.jobDumpService.create(createDumpDto)
+          : domain == 'scholarship'
+          ? await this.scholarshipDumpService.create(createDumpDto)
+          : await this.retailDumpService.create(createDumpDto);
+      });
+
       const searchResponse = await this.httpService.post(this.getUrl.getStgSearchUrl, searchPayload);
       console.log('searchResponse', searchResponse);
       return searchResponse;
     } catch (error) {
-      throw error?.response;
+      throw error;
     }
   }
 
@@ -100,40 +120,43 @@ export class StgService {
     try {
       console.log('onSearchResponse', JSON.stringify(searchRequestDto));
       // Dump data to database
-      // const domain =
-      //   searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
-      //     ? 'course'
-      //     : searchRequestDto?.context?.domain === DomainsEnum.JOB_DOMAIN
-      //     ? 'job'
-      //     : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
-      //     ? 'scholarship'
-      //     : 'retail';
+      console.log('searchRequestDto', JSON.stringify(searchRequestDto.data));
+      const domain =
+        searchRequestDto?.context?.domain === DomainsEnum.COURSE_DOMAIN
+          ? 'course'
+          : searchRequestDto?.context?.domain === DomainsEnum.JOB_DOMAIN
+          ? 'job'
+          : searchRequestDto?.context?.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
+          ? 'scholarship'
+          : 'retail';
+      const message = searchRequestDto?.data[domain]?.message;
 
-      // const selectRequestDetails =
-      //   domain == 'course'
-      //     ? await this.courseDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'search')
-      //     : domain == 'job'
-      //     ? await this.jobDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'search')
-      //     : domain == 'scholarship'
-      //     ? await this.scholarshipDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'search')
-      //     : await this.retailDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'search');
-      // // Dump the response into database
-      // const createDumpDto: CreateDumpDto = {
-      //   context: searchRequestDto?.context,
-      //   transaction_id: searchRequestDto?.context?.transaction_id,
-      //   domain: domain,
-      //   message_id: searchRequestDto?.context?.message_id,
-      //   device_id: selectRequestDetails?.context?.device_id,
-      //   request_type: searchRequestDto?.context?.action,
-      //   message: searchRequestDto?.message,
-      // };
-      // domain == 'course'
-      //   ? await this.courseDumpService.create(createDumpDto)
-      //   : domain == 'job'
-      //   ? await this.jobDumpService.create(createDumpDto)
-      //   : domain == 'scholarship'
-      //   ? await this.scholarshipDumpService.create(createDumpDto)
-      //   : await this.retailDumpService.create(createDumpDto);
+      const selectRequestDetails =
+        domain == 'course'
+          ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'search')
+          : domain == 'job'
+          ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'search')
+          : domain == 'scholarship'
+          ? await this.scholarshipDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'search')
+          : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'search');
+      // Dump the response into database
+      const createDumpDto: CreateDumpDto = {
+        context: searchRequestDto?.context,
+        transaction_id: searchRequestDto?.context?.transaction_id,
+        domain: domain,
+        message_id: searchRequestDto?.context?.message_id,
+        device_id: selectRequestDetails?.device_id,
+        request_type: searchRequestDto?.context?.action,
+        message: message,
+      };
+
+      domain == 'course'
+        ? await this.courseDumpService.create(createDumpDto)
+        : domain == 'job'
+        ? await this.jobDumpService.create(createDumpDto)
+        : domain == 'scholarship'
+        ? await this.scholarshipDumpService.create(createDumpDto)
+        : await this.retailDumpService.create(createDumpDto);
       sendDataToClients(searchRequestDto?.context?.transaction_id, searchRequestDto?.data, connectedClients);
       return searchRequestDto;
     } catch (error) {
@@ -159,15 +182,15 @@ export class StgService {
 
       const selectRequestDetails =
         domain == 'course'
-          ? await this.courseDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_search')
+          ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search')
           : domain == 'job'
-          ? await this.jobDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_search')
+          ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search')
           : domain == 'scholarship'
-          ? await this.scholarshipDumpService.findBytransaction_id(
+          ? await this.scholarshipDumpService.findByTransactionId(
               searchRequestDto?.context?.transaction_id,
               'on_search',
             )
-          : await this.retailDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_search');
+          : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_search');
       // Dump the response into database
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,
@@ -210,15 +233,15 @@ export class StgService {
 
       const selectRequestDetails =
         domain == 'course'
-          ? await this.courseDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_select')
+          ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_select')
           : domain == 'job'
-          ? await this.jobDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_select')
+          ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_select')
           : domain == 'scholarship'
-          ? await this.scholarshipDumpService.findBytransaction_id(
+          ? await this.scholarshipDumpService.findByTransactionId(
               searchRequestDto?.context?.transaction_id,
               'on_select',
             )
-          : await this.retailDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_select');
+          : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_select');
       // Dump the response into database
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,
@@ -229,6 +252,7 @@ export class StgService {
         request_type: searchRequestDto?.context?.action,
         message: searchRequestDto?.message,
       };
+      console.log(createDumpDto, 'dumping on init');
       domain == 'course'
         ? await this.courseDumpService.create(createDumpDto)
         : domain == 'job'
@@ -261,12 +285,12 @@ export class StgService {
 
       const selectRequestDetails =
         domain == 'course'
-          ? await this.courseDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_init')
+          ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init')
           : domain == 'job'
-          ? await this.jobDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_init')
+          ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init')
           : domain == 'scholarship'
-          ? await this.scholarshipDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_init')
-          : await this.retailDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_init');
+          ? await this.scholarshipDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init')
+          : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_init');
       // Dump the response into database
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,
@@ -309,15 +333,15 @@ export class StgService {
 
       const selectRequestDetails =
         domain == 'course'
-          ? await this.courseDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_confirm')
+          ? await this.courseDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_confirm')
           : domain == 'job'
-          ? await this.jobDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_confirm')
+          ? await this.jobDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_confirm')
           : domain == 'scholarship'
-          ? await this.scholarshipDumpService.findBytransaction_id(
+          ? await this.scholarshipDumpService.findByTransactionId(
               searchRequestDto?.context?.transaction_id,
               'on_confirm',
             )
-          : await this.retailDumpService.findBytransaction_id(searchRequestDto?.context?.transaction_id, 'on_confirm');
+          : await this.retailDumpService.findByTransactionId(searchRequestDto?.context?.transaction_id, 'on_confirm');
       // Dump the response into database
       const createDumpDto: CreateDumpDto = {
         context: searchRequestDto?.context,

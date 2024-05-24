@@ -11,29 +11,28 @@ import { StatusRequestDto } from 'src/modules/stg/dto/status-request.dto';
 @Injectable()
 export class RequestPayloadUtilsService {
   createSearchPayload(searchRequestDto: SearchRequestDto) {
-    try {
-      return {
-        domain: searchRequestDto.domain,
-        context: {
-          action: stgAction.search,
-          transaction_id: searchRequestDto.context.transaction_id,
-          message_id: uuidv4(),
-          ttl: searchConstants.ttl,
-        },
-        message: {
-          intent: {
-            item: {
-              descriptor: {
-                name: searchRequestDto.message.searchQuery,
-              },
+    return {
+      domain: searchRequestDto.domain,
+      context: {
+        action: stgAction.search,
+        transaction_id: searchRequestDto.context.transaction_id,
+        message_id: uuidv4(),
+        ttl: searchConstants.ttl,
+      },
+      message: {
+        intent: {
+          item: {
+            descriptor: {
+              name: searchRequestDto?.message?.searchQuery,
             },
           },
         },
-      };
-    } catch (error) {
-      console.log(error);
-      return error?.message;
-    }
+      },
+    };
+  }
+  catch(error) {
+    console.log(error);
+    return error?.message;
   }
 
   createSelectPayload(selectRequestDto: SelectRequestDto) {
@@ -46,7 +45,7 @@ export class RequestPayloadUtilsService {
       message: {
         order: {
           items_id: selectRequestDto.items_id,
-          providerId: selectRequestDto.provider_id,
+          provider_id: selectRequestDto.provider_id,
           fulfillment_id: selectRequestDto?.fulfillment_id,
         },
       },
