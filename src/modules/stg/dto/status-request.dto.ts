@@ -1,4 +1,10 @@
-import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+
+export class MessageDto {
+  @IsNotEmpty({ message: 'Order id is required' })
+  @IsString({ message: 'Order id must be a string' })
+  order_id: string;
+}
 
 export class ContextDto {
   @IsNotEmpty({ message: 'Transaction ID is required' })
@@ -6,21 +12,10 @@ export class ContextDto {
   transaction_id: string;
 
   @IsOptional()
-  @IsString({ message: 'Bap Uri must be a string' })
-  bap_uri: string;
+  @IsString({ message: 'Order id must be a string' })
+  domain: string;
 }
-
-export class MessageDto {
-  searchQuery: string;
-}
-
-export class SearchRequestDto {
-  @IsNotEmpty({ message: 'Domain should not be empty' })
-  @IsArray({ message: ' Domain must be string' })
-  domain: Array<string>;
-  @IsOptional()
-  deviceId?: string;
-
+export class StatusRequestDto {
   @IsNotEmpty({ message: 'Context is required' })
   @IsObject({ message: 'Context must be a object' })
   context: ContextDto;

@@ -4,6 +4,11 @@
 export const Endpoints = {
   getProviderUrl: '/api/v1/e-auth',
   getStgSearchUrl: '/api/v1/stg/search',
+  getStgSelectUrl: '/api/v1/stg/select',
+  getStgInitUrl: '/api/v1/stg/init',
+  getStgConfirmUrl: '/api/v1/stg/confirm',
+  getStgStatusUrl: '/api/v1/stg/status',
+
   getWalletUrl: '/api/v1/wallet',
   getWalletVcsUrl: '/api/v1/wallet/vcs',
   getWalletVcUrl: '/api/v1/wallet/vc',
@@ -26,4 +31,10 @@ export const Endpoints = {
   logOutUserUrl: '/api/v1/user/logout',
   updateUserLanguagePreferenceUrl: '/api/v1/user/language-preference',
   getDevicePreferenceUrl: '/api/v1/user/device-preference',
+  getSupportedLanguageUrl: '/api/v1/ai-ml/supported-languages',
+  getTranslateLanguageUrl: '/api/v1/ai-ml/translate',
+  getLanguagesForUserUrl: '/api/v1/ai-ml/languages',
+  getDomainsUrl: '/api/v1/ai-ml/domains',
+  getCategoriesUrl: '/api/v1/ai-ml/categories',
+  updateUserOnCallBackUrl: '/e-auth/callback',
 };
