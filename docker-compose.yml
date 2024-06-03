@@ -1,10 +1,10 @@
 version: '3'
 services:
   xplor_il_backend_service:
-    #logging:
-      #driver: "file-log-driver"
-      #options:
-        #fpath: "/docker/xplor_il_backend_service.log"
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/xplor_il_backend_service.log"
     container_name: implementation-layer-nest-backend
     build: .
     environment:
