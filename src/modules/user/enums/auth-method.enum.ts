@@ -1,4 +1,3 @@
-// src/user/enums/auth-method.enum.ts
 // Enum for different authentication methods supported by the application
 export enum AuthMethod {
   // Aadhar authentication method

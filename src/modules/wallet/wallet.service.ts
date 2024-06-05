@@ -13,7 +13,7 @@ import {
   WalletVcQueryDto,
 } from './dto';
 import { WALLET_ERROR_MESSAGES } from '../../common/constants/error-message';
-import { GetUrl } from 'src/common/utils/get-urls-utils.service';
+import { GetUrl } from '../../common/utils/get-urls-utils.service';
 
 @Injectable()
 export class WalletService {

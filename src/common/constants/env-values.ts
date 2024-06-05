@@ -1,0 +1,17 @@
+export const EnvDefaultValues = {
+  NODE_ENV_DEV: 'development',
+  NODE_ENV_PROD: 'production',
+  NODE_ENV_TEST: 'test',
+  NODE_ENV_PROV: 'provision',
+  NODE_ENV: 'development',
+  PORT: 5000,
+  DATABASE_URL: 'mongodb://localhost:27017/xplore',
+  CORE_SERVICE_URL: 'http://localhost:5000',
+  ES_SERVICE_URL: 'http://xplor-elasticsearch:9200',
+  STG_SERVICE_URL: 'http://localhost:5001',
+  KAFKA_BROKERS: ['localhost:9092'],
+  ES_USERNAME: 'elastic',
+  ES_PASSWORD: 'elastic',
+  KAFKA_CLIENT_ID: 'xplore',
+  KAFKA_GROUP_ID: 'xplore',
+};

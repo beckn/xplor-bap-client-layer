@@ -1,22 +1,24 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CourseModel, CourseSchema } from './schema/course.schema ';
-import { ScholarshipModel, ScholarshipSchema } from './schema/scholarship.schema';
-import { JobModel, JobSchema } from './schema/job.schema';
-import { RetailModel, RetailSchema } from './schema/retail.schema';
-import { JobDumpService } from './service/job-dump.service';
-import { CourseDumpService } from './service/course-dump.service';
-import { ScholarshipDumpService } from './service/scholarship-dump.service';
-import { RetailDumpService } from './service/retail-dump.service';
+import { ItemSchema, ItemModel, ItemDumpModel } from './schema/item.schema';
+import { ItemDumpService } from './service/item-dump.service';
+import { HindiItemDumpSchema, HindiItemModel } from './schema/hindi-item.schema';
+import { PunjabiItemDumpSchema, PunjabiItemModel } from './schema/punjabi-item.schema';
+import { PortugueseItemDumpSchema, PortugueseItemModel } from './schema/portuguese-item.schema';
+import { SpanishItemDumpSchema, SpanishItemModel } from './schema/spanish-item.schema';
+import { OrderModel, OrderSchema } from './schema/order.schema';
+import { OrderDumpService } from './service/order-dump.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: CourseModel, schema: CourseSchema }]),
-    MongooseModule.forFeature([{ name: ScholarshipModel, schema: ScholarshipSchema }]),
-    MongooseModule.forFeature([{ name: JobModel, schema: JobSchema }]),
-    MongooseModule.forFeature([{ name: RetailModel, schema: RetailSchema }]),
+    MongooseModule.forFeature([{ name: ItemModel, schema: ItemSchema }]),
+    MongooseModule.forFeature([{ name: HindiItemModel, schema: HindiItemDumpSchema }]),
+    MongooseModule.forFeature([{ name: PunjabiItemModel, schema: PunjabiItemDumpSchema }]),
+    MongooseModule.forFeature([{ name: PortugueseItemModel, schema: PortugueseItemDumpSchema }]),
+    MongooseModule.forFeature([{ name: SpanishItemModel, schema: SpanishItemDumpSchema }]),
+    MongooseModule.forFeature([{ name: OrderModel, schema: OrderSchema }]),
   ],
-  providers: [JobDumpService, CourseDumpService, ScholarshipDumpService, RetailDumpService],
-  exports: [JobDumpService, CourseDumpService, ScholarshipDumpService, RetailDumpService],
+  providers: [ItemDumpService, ItemDumpModel, OrderDumpService],
+  exports: [ItemDumpService, ItemDumpModel, OrderDumpService],
 })
 export class DumpModule {}

@@ -1,5 +1,3 @@
-// src/user/dto/create-user.dto.ts
-
 // Importing necessary decorators from class-validator and class-transformer
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';

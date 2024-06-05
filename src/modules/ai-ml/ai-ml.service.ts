@@ -5,9 +5,8 @@ import { HttpService } from '@nestjs/axios';
 import { TranslateDto } from './dto';
 
 import { LatLongDto } from '../../common/utils/dto/lat-long.dto';
-
-import { GetUrl } from 'src/common/utils/get-urls-utils.service';
-import { DeviceIdDto } from 'src/common/utils/dto/device-dto';
+import { GetUrl } from '../../common/utils/get-urls-utils.service';
+import { DeviceIdDto } from '../../common/utils/dto/device-dto';
 
 @Injectable()
 export class AiMlService {

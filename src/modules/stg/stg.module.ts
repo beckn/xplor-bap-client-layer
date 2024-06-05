@@ -1,13 +1,18 @@
 import { Module } from '@nestjs/common';
 import { StgService } from './services/stg.service';
 import { StgController } from './stg.controller';
-import { RequestPayloadUtilsService } from 'src/common/utils/request-payload.utils.service';
 import { DumpModule } from '../dump/dump.module';
-import { AxiosService } from 'src/common/axios/axios.service';
+import { KafkaModule } from '../kafka/kafka.module';
+import { AxiosService } from '../../common/axios/axios.service';
+import { CommonModule } from '../../common/common.module';
+import { RequestPayloadUtilsService } from '../../common/utils/request-payload.utils.service';
+import { ResponsePayloadUtilsService } from '../../common/utils/response-payload.utils.service';
+import { TranslateService } from '../../services/translate/service/translate.service';
 
 @Module({
-  imports: [DumpModule],
+  imports: [DumpModule, CommonModule, KafkaModule],
   controllers: [StgController],
-  providers: [StgService, RequestPayloadUtilsService, AxiosService],
+  providers: [TranslateService, StgService, RequestPayloadUtilsService, AxiosService, ResponsePayloadUtilsService],
+  // ElasticsearchService, ElasticSearchService],
 })
 export class StgModule {}

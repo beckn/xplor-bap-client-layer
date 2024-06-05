@@ -9,15 +9,20 @@ import {
   CreateMPinDto,
   CreateUserDto,
   QueryOtpTypeDto,
+  QueryUserProfile,
   UpdateDevicePreferenceDto,
   VerifyOtpDto,
 } from './dto';
-import { USER_ERROR_MESSAGES } from '../../common/constants/error-message';
+import { HttpResponseMessage, USER_ERROR_MESSAGES } from '../../common/constants/error-message';
 import { ResetMpinDto } from './dto/reset-mpin.dto';
 import { ConfigService } from '@nestjs/config';
 import { CreateWalletDto } from '../wallet/dto';
 import { DeviceIdDto } from '../../common/utils/dto/device-dto';
-import { GetUrl } from 'src/common/utils/get-urls-utils.service';
+import { OrderDumpService } from '../dump/service/order-dump.service';
+import { UserProfile } from '../../common/constants/user/user-profile';
+import { GetUrl } from '../../common/utils/get-urls-utils.service';
+import { getSuccessResponse } from '../../utils/success-response.util';
+import { ResponsePayloadUtilsService } from '../../common/utils/response-payload.utils.service';
 
 // Define the UserService with necessary methods for user operations
 @Injectable()
@@ -28,20 +33,34 @@ export class UserService {
     private readonly getUrl: GetUrl,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly orderService: OrderDumpService,
+    private readonly responsePayloadUtilsService: ResponsePayloadUtilsService,
   ) {
     this.serverDefaultLanguage = this.configService.get('serverDefaultLanguage');
   }
 
   // Method to find a user by token
-  async findOne(token: string) {
+  async findOne(token: string, query: QueryUserProfile) {
     try {
-      return (
+      const foundUser = (
         await this.httpService.axiosRef.get(this.getUrl.getUserProfileUrl, {
           headers: {
             Authorization: token,
           },
+          params: query,
         })
       )?.data;
+      const count: any = UserProfile.count;
+      let totalCount = 0;
+      const orders = (await this.getUserOrdersCountForDomain(token))?.data;
+      orders.map((value: any) => {
+        const domain = this.responsePayloadUtilsService.getXplorDomain(value._id);
+        const domainCount = value?.count;
+        totalCount = totalCount + domainCount;
+        count[domain] = domainCount?.toString();
+      });
+      foundUser.data.count = { ...count, orders: totalCount.toString() || '0' };
+      return foundUser;
     } catch (error) {
       this.logger.error(USER_ERROR_MESSAGES.GET_USER_DETAILS, error);
       throw error?.response?.data;
@@ -88,45 +107,11 @@ export class UserService {
       throw error?.response?.data;
     }
   }
-  // Method to update user KYC
-  // async updateUserKyc(token: string) {
-  //   try {
-  //     const user = (
-  //       await this.httpService.axiosRef.patch(
-  //         this.getUrl.updateUserKycUrl,
-  //         {
-  //           lastName: faker.person.lastName(),
-  //           firstName: faker.person.firstName(),
-  //           address: faker.location.streetAddress(),
-  //           email: faker.internet.email(),
-  //           gender: faker.person.gender(),
-  //           provider: {
-  //             id: faker.string.uuid(),
-  //             name: faker.person.jobArea(),
-  //           },
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: token,
-  //           },
-  //         },
-  //       )
-  //     )?.data;
-  //     return user;
-  //   } catch (error) {
-  //     this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_KYC, error);
-  //     throw error?.response?.data;
-  //   }
-  // }
 
   // Method to send OTP
-  async sendOtp(phoneNumber: PhoneNumberDto): Promise<string> {
+  async sendOtp(phoneNumberDto: PhoneNumberDto): Promise<string> {
     try {
-      const otp = (
-        await this.httpService.axiosRef.post(this.getUrl.getUserSendOtpUrl, {
-          phoneNumber: phoneNumber.phoneNumber.replaceAll(' ', ''),
-        })
-      )?.data;
+      const otp = (await this.httpService.axiosRef.post(this.getUrl.getUserSendOtpUrl, phoneNumberDto))?.data;
       return otp;
     } catch (error: any) {
       this.logger.error(USER_ERROR_MESSAGES.SEND_OTP, error);
@@ -176,16 +161,6 @@ export class UserService {
       throw error?.response?.data;
     }
   }
-  // // Method to resend OTP
-  // async resendOtp(resendOtp: ResendOtpDto) {
-  //   try {
-  //     const otp = (await this.httpService.axiosRef.post(this.getUrl.getUserResendOtpUrl, resendOtp))?.data;
-  //     return otp;
-  //   } catch (error) {
-  //     this.logger.error(USER_ERROR_MESSAGES.RESEND_OTP, error);
-  //     throw error.response.data;
-  //   }
-  // }
 
   // Method to create MPIN
   async createMPin(token: string, mPin: CreateMPinDto) {
@@ -315,6 +290,42 @@ export class UserService {
       return response;
     } catch (error) {
       this.logger.error(USER_ERROR_MESSAGES.GET_DEVICE_PREFERENCE, error);
+      throw error?.response?.data;
+    }
+  }
+
+  async getUserOrders(token: string) {
+    try {
+      const user: any = (
+        await this.httpService.axiosRef.get(this.getUrl.getUserProfileUrl, {
+          headers: { Authorization: token },
+          params: { translate: false },
+        })
+      )?.data?.data;
+      this.logger.log('user', user);
+      const userId = user._id;
+      this.logger.log('userId', userId);
+      return getSuccessResponse(await this.orderService.findOrders(userId), HttpResponseMessage.OK);
+    } catch (error) {
+      this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
+      throw error?.response?.data;
+    }
+  }
+
+  async getUserOrdersCountForDomain(token: string) {
+    try {
+      const user: any = (
+        await this.httpService.axiosRef.get(this.getUrl.getUserProfileUrl, {
+          headers: { Authorization: token },
+          params: { translate: false },
+        })
+      )?.data?.data;
+      this.logger.log('user', user);
+      const userId = user._id;
+      this.logger.log('userId', userId);
+      return getSuccessResponse(await this.orderService.findOrdersCountForDomain(userId), HttpResponseMessage.OK);
+    } catch (error) {
+      this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
       throw error?.response?.data;
     }
   }

@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
 import { Endpoints } from '../constants/endpoint';
-
-// import { Endpoints } from '../constants/endpoint'; // Assuming 'endpoints' file path
 
 /**
  * A service to get various URLs used across the application for eAuth, Wallet, and User services.
@@ -12,6 +9,7 @@ import { Endpoints } from '../constants/endpoint';
 export class GetUrl extends ConfigService {
   // URLs from environment variables.
   coreServiceUrl = this.get('coreServiceUrl');
+  stgServiceUrl = this.get('stgServiceUrl');
   getProvidersUrl = this.coreServiceUrl + Endpoints.getProviderUrl;
   getStgSearchUrl = this.coreServiceUrl + Endpoints.getStgSearchUrl;
   getStgSelectUrl = this.coreServiceUrl + Endpoints.getStgSelectUrl;
@@ -42,6 +40,9 @@ export class GetUrl extends ConfigService {
   logOutUserUrl = this.coreServiceUrl + Endpoints.logOutUserUrl;
   updateUserLanguagePreferenceUrl = this.coreServiceUrl + Endpoints.updateUserLanguagePreferenceUrl;
   getDevicePreferenceUrl = this.coreServiceUrl + Endpoints.getDevicePreferenceUrl;
+  subscribeToKafkaCatalogue = this.stgServiceUrl + Endpoints.getDevicePreferenceUrl;
+  subscribeToKafkaTranslation = this.stgServiceUrl + Endpoints.getDevicePreferenceUrl;
+  getSearchItems = this.stgServiceUrl + Endpoints.getSearchItems;
   getSupportedLanguageUrl = this.coreServiceUrl + Endpoints.getSupportedLanguageUrl;
   getTranslateLanguageUrl = this.coreServiceUrl + Endpoints.getTranslateLanguageUrl;
   getLanguagesForUserUrl = this.coreServiceUrl + Endpoints.getLanguagesForUserUrl;

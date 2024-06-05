@@ -1,5 +1,3 @@
-// src/user/dto/create-kyc.dto.ts
-
 // Importing necessary decorators from class-validator and class-transformer
 import { IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';

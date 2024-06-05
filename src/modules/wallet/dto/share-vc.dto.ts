@@ -15,5 +15,8 @@ export class ShareVcRequestDto {
   readonly remarks: string;
 
   @IsOptional()
+  readonly sharedWithEntity: string;
+
+  @IsOptional()
   readonly restrictions: Restrictions;
 }

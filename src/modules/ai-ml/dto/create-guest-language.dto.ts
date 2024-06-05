@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateGuestLanguageDto {
   @ApiProperty({ description: 'The user device ID', example: 'abc123' })
