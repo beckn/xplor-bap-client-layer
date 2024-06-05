@@ -3,7 +3,7 @@ import { AiMlService } from './ai-ml.service';
 import { TranslateDto } from './dto';
 import { LatLongDto } from '../../common/utils/dto/lat-long.dto';
 import { DeviceIdDto } from '../../common/utils/dto/device-dto';
-import { ExtractToken } from 'src/common/decorators/extract-token.decorator';
+import { ExtractToken } from '../../common/decorators/extract-token.decorator';
 
 @Controller({ path: 'ai-ml', version: '1' })
 export class AiMlController {

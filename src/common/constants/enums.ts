@@ -13,9 +13,17 @@ export enum DomainsEnum {
  * Object mapping domain names to their corresponding identifiers.
  * Used for internal reference and consistency across the application.
  */
-export const xplorDomain = {
-  course: 'course', // Identifier for course domain
-  job: 'job', // Identifier for job domain
-  scholarship: 'scholarship', // Identifier for scholarship domain
-  retail: 'retail', // Identifier for retail domain
-};
+export enum xplorDomain {
+  COURSE = 'course', // Identifier for course domain
+  JOB = 'job', // Identifier for job domain
+  SCHOLARSHIP = 'scholarship', // Identifier for scholarship domain
+  RETAIL = 'retail', // Identifier for retail domain
+}
+
+export enum Languages {
+  ENGLISH = 'en',
+  HINDI = 'hi',
+  PUNJABI = 'pa',
+  PORTUGUESE = 'pt',
+  SPANISH = 'es',
+}

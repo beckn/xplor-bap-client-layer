@@ -1,17 +1,20 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import envValidation from '../../config/env/validation/env.validation';
 import configuration from '../../config/env/env.config';
-import * as Joi from 'joi';
-import { CommonModule } from 'src/common/common.module';
 import { EAuthModule } from '../e-auth/e-auth.module';
 import { StgModule } from '../stg/stg.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { UserModule } from '../user/user.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AiMlModule } from '../ai-ml/ai-ml.module';
+import { KafkaModule } from '../kafka/kafka.module';
+import { CommonModule } from '../../common/common.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +25,8 @@ import { AiMlModule } from '../ai-ml/ai-ml.module';
         abortEarly: false,
       },
     }),
+    KafkaModule.forRoot(),
+    // ElasticSearchModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -30,6 +35,7 @@ import { AiMlModule } from '../ai-ml/ai-ml.module';
       inject: [ConfigService],
     }),
     { module: CommonModule, global: true },
+    ScheduleModule.forRoot(),
     EAuthModule,
     StgModule,
     WalletModule,

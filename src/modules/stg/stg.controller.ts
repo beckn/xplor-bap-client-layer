@@ -1,55 +1,35 @@
-/* eslint-disable no-console */
-
 import { StgService } from './services/stg.service';
 import { SearchRequestDto } from './dto/search-request.dto';
-import { Body, Controller, Get, Injectable, Post, Req, Res } from '@nestjs/common';
-import { SseConnectedMessage } from '../../common/constants/response-message';
+import { Body, Controller, Get, Injectable, Logger, Post, Query, Req, Res } from '@nestjs/common';
 import { SelectRequestDto } from './dto/select-request-dto';
 import { InitRequestDto } from './dto/init-request.dto';
 import { ConfirmRequestDto } from './dto/confirm-request.dto';
+import { PaginationRequestQuery } from './dto/pagination-request.dto';
+import { SseConnectedMessage } from '../../common/constants/response-message';
+import { ExtractToken } from '../../common/decorators/extract-token.decorator';
 import { StatusRequestDto } from './dto/status-request.dto';
 
 @Controller({ version: '1', path: 'stg' })
 @Injectable()
 export class StgController {
   private connectedClients: Map<string, any> = new Map();
+  private readonly logger = new Logger(StgController.name);
 
   constructor(private readonly stgService: StgService) {
+    this.sendDataToClients = this.sendDataToClients.bind(this);
     if (!this.connectedClients) {
       this.connectedClients = new Map();
     }
   }
 
   @Post('search')
-  search(@Body() searchRequestDto: SearchRequestDto) {
-    console.log('heyyyy', searchRequestDto);
-    return this.stgService.search(searchRequestDto);
+  search(@Query() paginationRequest: PaginationRequestQuery, @Body() searchRequestDto: SearchRequestDto) {
+    return this.stgService.search(paginationRequest, searchRequestDto);
   }
 
   @Post('select')
-  select(@Body() selectRequestDto: SelectRequestDto) {
-    return this.stgService.select(selectRequestDto);
-  }
-
-  @Post('init')
-  init(@Body() initRequestDto: InitRequestDto) {
-    return this.stgService.init(initRequestDto);
-  }
-
-  @Post('confirm')
-  confirm(@Body() confirmRequestDto: ConfirmRequestDto) {
-    return this.stgService.confirm(confirmRequestDto);
-  }
-
-  @Post('status')
-  status(@Body() statusRequestDto: StatusRequestDto) {
-    return this.stgService.status(statusRequestDto);
-  }
-
-  @Post('on_search')
-  onSearch(@Body() searchResponse: any) {
-    // Bind the context of sendDataToClients to this instance
-    return this.stgService.onSearch(searchResponse, this.connectedClients, this.sendDataToClients);
+  select(@ExtractToken() token: string, @Body() selectRequestDto: SelectRequestDto) {
+    return this.stgService.select(token, selectRequestDto);
   }
 
   @Post('on_select')
@@ -63,10 +43,30 @@ export class StgController {
     }
   }
 
+  @Post('init')
+  init(@ExtractToken() token: string, @Body() initRequestDto: InitRequestDto) {
+    return this.stgService.init(token, initRequestDto);
+  }
+
   @Post('on_init')
   onInit(@Body() searchResponse: any) {
     // Bind the context of sendDataToClients to this instance
     return this.stgService.onInit(searchResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Get('fetch-search-data')
+  fetchSearchData() {
+    return this.stgService.fetchSearchData();
+  }
+
+  @Post('confirm')
+  confirm(@ExtractToken() token: string, @Body() confirmRequestDto: ConfirmRequestDto) {
+    return this.stgService.confirm(token, confirmRequestDto);
+  }
+
+  @Post('status')
+  status(@ExtractToken() token: string, @Body() statusRequestDto: StatusRequestDto) {
+    return this.stgService.status(token, statusRequestDto);
   }
 
   @Post('on_confirm')
@@ -76,9 +76,9 @@ export class StgController {
   }
 
   @Post('on_status')
-  onStatus(@Body() searchResponse: any) {
+  onStatus(@Body() statusResponse: any) {
     // Bind the context of sendDataToClients to this instance
-    return this.stgService.onStatus(searchResponse, this.connectedClients, this.sendDataToClients);
+    return this.stgService.onStatus(statusResponse, this.connectedClients, this.sendDataToClients);
   }
 
   @Get('sse')
@@ -104,26 +104,27 @@ export class StgController {
     );
     // Handle client disconnect
     req.on('close', () => {
-      this.connectedClients.get(transaction_id).end();
+      this.connectedClients.get(transaction_id)?.end();
       this.connectedClients.delete(transaction_id); // Remove the disconnected client
     });
   }
 
+  @Get('subscribe')
+  async subscribeToKafka() {
+    return await this.stgService.subscribeToCatalogKafka();
+  }
+
   async sendDataToClients(transaction_id: string, data: any, connectedClients: Map<string, any>): Promise<void> {
     try {
-      console.log('sseReceivedData', data);
-      console.log('connectedClients in sendDataToClients', connectedClients);
+      this.logger.log('sseReceivedData', data);
 
       if (connectedClients.has(transaction_id)) {
-        // eslint-disable-next-line no-console
-        console.log('sseData', `data: ${JSON.stringify(data)}`);
-        console.log('connectedClients.get(transaction_id)', connectedClients.get(transaction_id));
+        this.logger.log('sseData', `data: ${JSON.stringify(data)}`);
         connectedClients.get(transaction_id)?.write(`data: ${JSON.stringify(data)}\n\n`);
       }
 
       return data;
     } catch (error) {
-      console.log('error', error);
       throw error;
     }
   }

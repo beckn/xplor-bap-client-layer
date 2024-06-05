@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class TranslateDto {
   @IsNotEmpty()
@@ -11,4 +11,11 @@ export class TranslateDto {
 
   @IsNotEmpty()
   content: any;
+
+  @IsOptional()
+  @IsArray()
+  excluded_keys: string[];
+
+  @IsOptional()
+  useAsync: boolean;
 }

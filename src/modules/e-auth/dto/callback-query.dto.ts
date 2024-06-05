@@ -1,5 +1,5 @@
 import { IsOptional } from 'class-validator';
-import { PROVIDERS } from 'src/common/constants/providers';
+import { PROVIDERS } from '../../../common/constants/providers';
 
 /**
  * Data Transfer Object (DTO) for handling callback queries.

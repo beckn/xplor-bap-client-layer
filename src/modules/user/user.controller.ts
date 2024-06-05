@@ -12,12 +12,13 @@ import {
   CreateLanguageDto,
   CreateUserDto,
   QueryOtpTypeDto,
+  QueryUserProfile,
   ResetMpinDto,
   UpdateDevicePreferenceDto,
 } from './dto';
 
 import { CreateMPinDto } from './dto/create-mpin.dto';
-import { DeviceIdDto } from 'src/common/utils/dto/device-dto';
+import { DeviceIdDto } from '../../common/utils/dto/device-dto';
 
 // Define the UserController with API tags for Swagger documentation
 @ApiTags('user')
@@ -79,8 +80,8 @@ export class UserController {
 
   // Endpoint to get user details
   @Get()
-  getUser(@ExtractToken() token: string) {
-    return this.userService.findOne(token);
+  getUser(@ExtractToken() token: string, @Query() query: QueryUserProfile) {
+    return this.userService.findOne(token, query);
   }
 
   // Endpoint to create MPIN
@@ -133,5 +134,10 @@ export class UserController {
   @Get('device-preference/:id')
   getDevicePreferenceByDeviceId(@Param('id') deviceId: string) {
     return this.userService.getDevicePreferenceById(deviceId);
+  }
+
+  @Get('orders')
+  getUserOrders(@ExtractToken() token: string) {
+    return this.userService.getUserOrders(token);
   }
 }

@@ -15,4 +15,7 @@ export class VerifyOtpDto {
 
   @IsOptional()
   targetLanguageCode?: string;
+
+  @IsOptional()
+  countryCode?: string;
 }

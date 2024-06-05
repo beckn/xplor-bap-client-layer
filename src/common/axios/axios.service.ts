@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class AxiosService {
   constructor(private readonly httpService: HttpService) {}
-
+  private readonly logger = new Logger(AxiosService.name);
   /**
    * Performs a GET request to the specified URL with optional parameters and headers.
    *
@@ -16,10 +16,12 @@ export class AxiosService {
   async get(url: string, params?: any, headers?: any) {
     try {
       // Perform the GET request using the HttpService's axiosRef
-      return await this.httpService.axiosRef.get(url, { params, headers });
+      return (await this.httpService.axiosRef.get(url, { params, headers }))?.data;
     } catch (error) {
       // Log the error using the GrafanaLoggerService
       // Note: The error is not thrown or handled here, which might be a design decision
+      this.logger.log(error);
+      throw error;
     }
   }
 

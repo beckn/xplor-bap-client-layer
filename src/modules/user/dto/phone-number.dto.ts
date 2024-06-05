@@ -14,6 +14,9 @@ export class PhoneNumberDto {
   deviceId?: string;
 
   @IsOptional()
+  userCheck?: boolean;
+
+  @IsOptional()
   targetLanguageCode: string;
 }
 

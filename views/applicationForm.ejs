@@ -126,8 +126,6 @@
       const formData = new FormData(event.target); // Get the form data
       const formValues = Object.fromEntries(formData.entries()); // Convert to an object
 
-      console.log(formValues); // Log the form values to the console
-
       // Here you can send the form data to the server using fetch or XMLHttpRequest if needed
       fetch('/submitApplication', {
         method: 'POST',
@@ -138,10 +136,8 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:', data);
       })
       .catch((error) => {
-        console.error('Error:', error);
       });
     });
   </script>
