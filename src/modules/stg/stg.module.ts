@@ -14,5 +14,6 @@ import { TranslateService } from '../../services/translate/service/translate.ser
   controllers: [StgController],
   providers: [TranslateService, StgService, RequestPayloadUtilsService, AxiosService, ResponsePayloadUtilsService],
   // ElasticsearchService, ElasticSearchService],
+  exports: [StgService],
 })
 export class StgModule {}

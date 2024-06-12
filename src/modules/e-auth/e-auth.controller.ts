@@ -1,5 +1,5 @@
 // Import necessary decorators, services, and DTOs
-import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EAuthService } from './e-auth.service';
 import { CallBackQueryDto } from './dto/callback-query.dto';
@@ -33,6 +33,11 @@ export class EAuthController {
   @Get('/callback')
   kycCallbackWebHook(@Query() callBackQueryDto: CallBackQueryDto) {
     return this.eAuthService.updateUserOnCallBack(callBackQueryDto, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('submitKycForm')
+  submitKycForm(@Body() kycData: any) {
+    return this.eAuthService.submitKycForm(kycData, this.connectedClients, this.sendDataToClients);
   }
 
   @Get('sse')

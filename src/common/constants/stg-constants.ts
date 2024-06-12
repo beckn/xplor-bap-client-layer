@@ -1,3 +1,5 @@
+import { IUserInfo } from '../interfaces/user-info';
+
 export const searchConstants = {
   action: 'search',
   ttl: 'PT1M',
@@ -69,6 +71,41 @@ export const fulfillments = [
     },
   },
 ];
+
+export const confirmFulfillments = (user: IUserInfo) => [
+  {
+    id: '1234',
+    customer: {
+      person: {
+        name: user?.kyc?.firstName + ' ' + user?.kyc?.lastName || 'Jane Doe',
+        age: '13',
+        gender: user?.kyc?.gender || 'Male',
+        tags: [
+          {
+            descriptor: {
+              code: 'professional-details',
+              name: 'Professional Details',
+            },
+            list: [
+              {
+                descriptor: {
+                  code: 'profession',
+                  name: 'profession',
+                },
+                value: 'student',
+              },
+            ],
+            display: true,
+          },
+        ],
+      },
+      contact: {
+        phone: user?.phoneNumber || '+91-9663088848',
+        email: user?.kyc?.email || 'jane.doe@example.com',
+      },
+    },
+  },
+];
 export const billing = {
   id: '{{$randomUUID}}',
   name: 'Jane Doe',
@@ -77,12 +114,21 @@ export const billing = {
   address: 'No 27, XYZ Lane, etc',
 };
 
+export const confirmBilling = (user: IUserInfo) => ({
+  id: '{{$randomUUID}}',
+  name: user?.kyc?.firstName + ' ' + user?.kyc?.lastName || 'Jane Doe',
+  phone: user?.phoneNumber || '+91-9663088848',
+  email: user?.kyc?.email || 'jane.doe@example.com',
+  address: user?.kyc?.address || 'No 27, XYZ Lane, etc',
+});
+
 export enum OrderStatus {
-  NOT_STARTED = 'NOT-STARTED',
+  NOT_STARTED = 'NOT_STARTED',
   STARTED = 'STARTED',
   IN_PROGRESS = 'IN-PROGRESS',
   COMPLETED = 'COMPLETED',
   SUBMITTED = 'SUBMITTED',
   REJECTED = 'REJECTED',
   APPROVED = 'APPROVED',
+  TILL_IN_PROGRESS = 'TILL_IN_PROGRESS',
 }

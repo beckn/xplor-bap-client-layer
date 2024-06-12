@@ -8,6 +8,7 @@ import { PaginationRequestQuery } from './dto/pagination-request.dto';
 import { SseConnectedMessage } from '../../common/constants/response-message';
 import { ExtractToken } from '../../common/decorators/extract-token.decorator';
 import { StatusRequestDto } from './dto/status-request.dto';
+import { ExtractUserId } from 'src/common/decorators/extract-userId';
 
 @Controller({ version: '1', path: 'stg' })
 @Injectable()
@@ -23,8 +24,12 @@ export class StgController {
   }
 
   @Post('search')
-  search(@Query() paginationRequest: PaginationRequestQuery, @Body() searchRequestDto: SearchRequestDto) {
-    return this.stgService.search(paginationRequest, searchRequestDto);
+  search(
+    @ExtractUserId() userId: string,
+    @Query() paginationRequest: PaginationRequestQuery,
+    @Body() searchRequestDto: SearchRequestDto,
+  ) {
+    return this.stgService.search(paginationRequest, searchRequestDto, userId);
   }
 
   @Post('select')
@@ -36,6 +41,7 @@ export class StgController {
   onSelect(@Body() selectResponse: any) {
     try {
       // Bind the context of sendDataToClients to this instance
+      this.logger.log('on_select_data', selectResponse);
       this.stgService.onSelect(selectResponse, this.connectedClients, this.sendDataToClients);
       return true;
     } catch (error) {
@@ -49,9 +55,11 @@ export class StgController {
   }
 
   @Post('on_init')
-  onInit(@Body() searchResponse: any) {
+  onInit(@Body() onInitResponse: any) {
     // Bind the context of sendDataToClients to this instance
-    return this.stgService.onInit(searchResponse, this.connectedClients, this.sendDataToClients);
+    this.logger.log('on_init_data', onInitResponse);
+
+    return this.stgService.onInit(onInitResponse, this.connectedClients, this.sendDataToClients);
   }
 
   @Get('fetch-search-data')
@@ -70,9 +78,10 @@ export class StgController {
   }
 
   @Post('on_confirm')
-  onConfirm(@Body() searchResponse: any) {
+  onConfirm(@Body() onConfirmResponse: any) {
     // Bind the context of sendDataToClients to this instance
-    return this.stgService.onConfirm(searchResponse, this.connectedClients, this.sendDataToClients);
+    this.logger.log('onConfirmResponse', onConfirmResponse);
+    return this.stgService.onConfirm(onConfirmResponse, this.connectedClients, this.sendDataToClients);
   }
 
   @Post('on_status')
@@ -117,6 +126,7 @@ export class StgController {
   async sendDataToClients(transaction_id: string, data: any, connectedClients: Map<string, any>): Promise<void> {
     try {
       this.logger.log('sseReceivedData', data);
+      this.logger.debug('transaction_id', transaction_id);
 
       if (connectedClients.has(transaction_id)) {
         this.logger.log('sseData', `data: ${JSON.stringify(data)}`);

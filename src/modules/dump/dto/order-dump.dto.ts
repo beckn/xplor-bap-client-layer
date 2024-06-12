@@ -21,7 +21,7 @@ export class OrderDto {
   item_id: string;
 
   @IsNotEmpty()
-  internal_item_id: string;
+  item_details: string;
 
   @IsNotEmpty()
   billing: Record<string, any>;
@@ -35,6 +35,14 @@ export class OrderDto {
   @IsNotEmpty()
   quote: Record<string, any>;
 
+  @IsNotEmpty()
+  rating: Record<string, any>;
+
+  @IsNotEmpty()
+  is_added_to_wallet: boolean;
+
+  @IsNotEmpty()
+  certificate_url: string;
   @IsOptional()
   @IsEnum(OrderStatus)
   status?: OrderStatus;

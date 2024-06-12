@@ -26,7 +26,7 @@ export class Order extends Document {
   item_id: string;
 
   @Prop({ type: String, required: true, ref: 'ItemDump' })
-  internal_item_id: string;
+  item_details: string;
 
   @Prop({ type: Object })
   billing: Record<string, any>;
@@ -39,6 +39,15 @@ export class Order extends Document {
 
   @Prop({ type: Object })
   quote: Record<string, any>;
+
+  @Prop({ type: Object })
+  rating: Record<string, any>;
+
+  @Prop({ type: Boolean, default: false, required: false })
+  is_added_to_wallet: boolean;
+
+  @Prop({ type: String, default: '', required: false })
+  certificate_url: string;
 
   @Prop({
     enum: OrderStatus,

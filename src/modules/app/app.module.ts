@@ -14,6 +14,7 @@ import { UserModule } from '../user/user.module';
 import { AiMlModule } from '../ai-ml/ai-ml.module';
 import { KafkaModule } from '../kafka/kafka.module';
 import { CommonModule } from '../../common/common.module';
+import { ItemModule } from '../item/item.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CommonModule } from '../../common/common.module';
     WalletModule,
     UserModule,
     AiMlModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

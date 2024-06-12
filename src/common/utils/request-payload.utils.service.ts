@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+
 import { DomainsEnum, xplorDomain } from '../constants/enums';
-import { billing, fulfillments } from '../constants/stg-constants';
+import { billing, confirmBilling, confirmFulfillments, fulfillments } from '../constants/stg-constants';
 import { IUserInfo } from '../interfaces/user-info';
 import { SelectRequestDto } from '../../modules/stg/dto/select-request-dto';
 import { ConfirmRequestDto } from '../../modules/stg/dto/confirm-request.dto';
@@ -42,15 +43,15 @@ export class RequestPayloadUtilsService {
       },
       message: {
         order: {
-          items_id: [...initRequestDto.item_id],
+          items_id: [initRequestDto.item_id],
           provider_id: initRequestDto.provider_id,
           billing: userInfo
             ? {
                 id: uuidv4(),
-                name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || '',
-                phone: userInfo.phoneNumber || '',
-                email: userInfo.kyc.email || '',
-                address: userInfo.kyc.address,
+                name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Doe',
+                phone: userInfo?.phoneNumber || '+91-9663088848',
+                email: userInfo?.kyc?.email || 'jane.doe@example.com',
+                address: userInfo?.kyc?.address || 'No 27, XYZ Lane, etc',
               }
             : { ...billing, id: uuidv4() },
           fulfillment: userInfo
@@ -61,7 +62,7 @@ export class RequestPayloadUtilsService {
                     person: {
                       name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Jane Doe',
                       age: '13',
-                      gender: userInfo.kyc.gender,
+                      gender: userInfo?.kyc?.gender || 'M',
                       tags: [
                         {
                           descriptor: {
@@ -82,8 +83,8 @@ export class RequestPayloadUtilsService {
                       ],
                     },
                     contact: {
-                      phone: userInfo.phoneNumber,
-                      email: userInfo.kyc.email,
+                      phone: userInfo?.phoneNumber || '+91-9663088848',
+                      email: userInfo?.kyc?.email || 'jane.doe@example.com',
                     },
                   },
                 },
@@ -94,7 +95,7 @@ export class RequestPayloadUtilsService {
     };
   }
 
-  createConfirmPayload(confirmRequestDto: ConfirmRequestDto) {
+  createConfirmPayload(confirmRequestDto: ConfirmRequestDto, user: IUserInfo) {
     return {
       context: {
         transaction_id: confirmRequestDto.transaction_id,
@@ -103,10 +104,10 @@ export class RequestPayloadUtilsService {
       },
       message: {
         order: {
-          items_id: confirmRequestDto.item_id,
+          items_id: [confirmRequestDto.item_id],
           provider_id: confirmRequestDto.provider_id,
-          billing: { ...billing, id: uuidv4() },
-          fulfillments: { ...fulfillments, id: uuidv4() },
+          billing: { ...confirmBilling(user), id: uuidv4() },
+          fulfillments: confirmFulfillments(user),
           payments:
             confirmRequestDto.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
               ? [
@@ -148,14 +149,50 @@ export class RequestPayloadUtilsService {
     };
   }
 
+  createRatingPayload(
+    rating: string,
+    items_id: string[],
+    provider_id: string,
+    rating_category: string,
+    order_id: string,
+    transaction_id: string,
+    domain: string,
+  ) {
+    return {
+      context: {
+        transaction_id: transaction_id,
+        domain: domain,
+        message_id: uuidv4(),
+        ttl: 'PT10M',
+      },
+      message: {
+        order: {
+          id: order_id,
+          items_id: items_id,
+          provider_id: provider_id,
+          rating_category: rating_category,
+          value: rating,
+        },
+      },
+    };
+  }
   getXplorDomain(domain: string) {
     switch (domain) {
       case DomainsEnum.COURSE_DOMAIN:
         return xplorDomain.COURSE;
       case DomainsEnum.JOB_DOMAIN:
         return xplorDomain.JOB;
-      default:
+      case DomainsEnum.SCHOLARSHIP_DOMAIN:
         return xplorDomain.SCHOLARSHIP;
+      case DomainsEnum.RETAIL_DOMAIN:
+        return xplorDomain.RETAIL;
+      case xplorDomain.COURSE:
+        return xplorDomain.COURSE;
+      case xplorDomain.SCHOLARSHIP:
+        return xplorDomain.SCHOLARSHIP;
+
+      default:
+        return 'dsep-belem:courses';
     }
   }
 }

@@ -19,6 +19,8 @@ import {
 
 import { CreateMPinDto } from './dto/create-mpin.dto';
 import { DeviceIdDto } from '../../common/utils/dto/device-dto';
+import { GetOrdersQueryDto } from './dto/get-orders-query.dto';
+import { RateOrderDto } from './dto/rate.order';
 
 // Define the UserController with API tags for Swagger documentation
 @ApiTags('user')
@@ -137,7 +139,21 @@ export class UserController {
   }
 
   @Get('orders')
-  getUserOrders(@ExtractToken() token: string) {
-    return this.userService.getUserOrders(token);
+  getUserOrders(@Query() paginationRequest: GetOrdersQueryDto, @ExtractToken() token: string) {
+    return this.userService.getUserOrders(token, paginationRequest);
+  }
+
+  @Get('orders/:id')
+  getOrderById(@Param('id') orderId: string, @ExtractToken() token: string) {
+    return this.userService.getOrderById(token, orderId);
+  }
+
+  @Patch('orders/:id/rate')
+  rateOrder(@Param('id') orderId: string, @ExtractToken() token: string, @Body() rateOrderRequest: RateOrderDto) {
+    return this.userService.rateOrder(token, orderId, rateOrderRequest);
+  }
+  @Patch('orders/:id/mark-add-to-wallet')
+  updatedIsAddedToWallet(@Param('id') orderId: string, @ExtractToken() token: string) {
+    return this.userService.updateIsAddedToWallet(orderId);
   }
 }
