@@ -8,7 +8,7 @@ export const Endpoints = {
   getStgInitUrl: '/api/v1/stg/init',
   getStgConfirmUrl: '/api/v1/stg/confirm',
   getStgStatusUrl: '/api/v1/stg/status',
-
+  rateOrderNetwork: '/api/v1/stg/rating',
   getWalletUrl: '/api/v1/wallet',
   getWalletVcsUrl: '/api/v1/wallet/vcs',
   getWalletVcUrl: '/api/v1/wallet/vc',
@@ -39,4 +39,5 @@ export const Endpoints = {
   getDomainsUrl: '/api/v1/ai-ml/domains',
   getCategoriesUrl: '/api/v1/ai-ml/categories',
   updateUserOnCallBackUrl: '/e-auth/callback',
+  updateUserKyc: '/api/v1/user/kyc',
 };

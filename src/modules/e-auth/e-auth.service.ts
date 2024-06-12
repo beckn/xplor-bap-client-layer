@@ -52,4 +52,68 @@ export class EAuthService {
       throw error?.response?.data;
     }
   }
+
+  async submitKycForm(
+    kycData: any,
+    connectedClients: Map<string, any>,
+    sendDataToClients: (userId: string, data: any, connectedClients: Map<string, any>) => void,
+  ) {
+    const address = {
+      careOf: kycData.lastName,
+      district: kycData.district,
+      houseNumber: kycData.houseNumber,
+      landmark: kycData.landmark,
+      locality: kycData.locality,
+      phone: kycData.phone,
+      pincode: kycData.pincode,
+      postOffice: kycData.pincode,
+      state: kycData.state,
+      street: kycData.street,
+      subDistrict: kycData.district,
+    };
+    const data = {
+      firstName: kycData.firstName,
+      lastName: kycData.lastName,
+      email: kycData.email,
+      address: JSON.stringify(address),
+      phone: kycData.phone,
+      gender: kycData.gender.charAt(0).toUpperCase(),
+      dob: this.formatDob(kycData.dob),
+    };
+    const token = kycData.authToken;
+    // console.log('urlParams', kycData.urlParams);
+    const userId = (jwt.decode(token.split(' ')[1]) as any)?.sub || '';
+    try {
+      const user = (
+        await this.httpService.axiosRef.patch(this.getUrl.updateUserKyc, data, {
+          headers: { Authorization: token },
+        })
+      )?.data;
+      if (user) {
+        setTimeout(() => {
+          sendDataToClients(userId, KycSuccessResponse, connectedClients);
+        }, 3000);
+      }
+    } catch (error) {
+      setTimeout(() => {
+        sendDataToClients(userId, KycUnSuccessResponse, connectedClients);
+      }, 3000);
+
+      this.logger.error(EAUTH_ERROR_MESSAGES.GET_USER_DETAILS, error);
+      throw error?.response?.data;
+    }
+  }
+
+  formatDob(inputDate) {
+    const parts = inputDate.split('-'); // Split the input date string by '-'
+    const formattedDate = new Date(parts[0], parts[1] - 1, parts[2]); // Create a Date object with the parts
+    const month = formattedDate.getMonth() + 1; // Get the month (zero-based index, so add 1)
+    const day = formattedDate.getDate(); // Get the day
+    const year = formattedDate.getFullYear(); // Get the year
+
+    // Format the date as 'mm/dd/yyyy'
+    const formattedDateString = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+
+    return formattedDateString;
+  }
 }

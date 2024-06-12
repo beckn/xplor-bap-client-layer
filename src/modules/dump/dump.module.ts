@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ItemSchema, ItemModel, ItemDumpModel } from './schema/item.schema';
 import { ItemDumpService } from './service/item-dump.service';
@@ -8,6 +8,8 @@ import { PortugueseItemDumpSchema, PortugueseItemModel } from './schema/portugue
 import { SpanishItemDumpSchema, SpanishItemModel } from './schema/spanish-item.schema';
 import { OrderModel, OrderSchema } from './schema/order.schema';
 import { OrderDumpService } from './service/order-dump.service';
+import { ItemWatcherService } from './service/item-watcher.service';
+import { StgModule } from '../stg/stg.module';
 
 @Module({
   imports: [
@@ -17,8 +19,9 @@ import { OrderDumpService } from './service/order-dump.service';
     MongooseModule.forFeature([{ name: PortugueseItemModel, schema: PortugueseItemDumpSchema }]),
     MongooseModule.forFeature([{ name: SpanishItemModel, schema: SpanishItemDumpSchema }]),
     MongooseModule.forFeature([{ name: OrderModel, schema: OrderSchema }]),
+    forwardRef(() => StgModule),
   ],
-  providers: [ItemDumpService, ItemDumpModel, OrderDumpService],
+  providers: [ItemDumpService, ItemDumpModel, OrderDumpService, ItemWatcherService],
   exports: [ItemDumpService, ItemDumpModel, OrderDumpService],
 })
 export class DumpModule {}

@@ -23,6 +23,13 @@ import { UserProfile } from '../../common/constants/user/user-profile';
 import { GetUrl } from '../../common/utils/get-urls-utils.service';
 import { getSuccessResponse } from '../../utils/success-response.util';
 import { ResponsePayloadUtilsService } from '../../common/utils/response-payload.utils.service';
+import { Languages } from '../../common/constants/enums';
+import { ItemDumpService } from '../dump/service/item-dump.service';
+import { GetOrdersQueryDto } from './dto/get-orders-query.dto';
+import { RateOrderDto } from './dto/rate.order';
+import { OrderStatus, fulfillments } from '../../common/constants/stg-constants';
+import { AxiosService } from '../../common/axios/axios.service';
+import { RequestPayloadUtilsService } from '../../common/utils/request-payload.utils.service';
 
 // Define the UserService with necessary methods for user operations
 @Injectable()
@@ -32,9 +39,12 @@ export class UserService {
   constructor(
     private readonly getUrl: GetUrl,
     private readonly httpService: HttpService,
+    private readonly axiosHttp: AxiosService,
     private readonly configService: ConfigService,
     private readonly orderService: OrderDumpService,
+    private readonly itemDumpService: ItemDumpService,
     private readonly responsePayloadUtilsService: ResponsePayloadUtilsService,
+    private readonly requestPayloadUtilsService: RequestPayloadUtilsService,
   ) {
     this.serverDefaultLanguage = this.configService.get('serverDefaultLanguage');
   }
@@ -294,7 +304,7 @@ export class UserService {
     }
   }
 
-  async getUserOrders(token: string) {
+  async getUserOrders(token: string, paginationRequest: GetOrdersQueryDto) {
     try {
       const user: any = (
         await this.httpService.axiosRef.get(this.getUrl.getUserProfileUrl, {
@@ -302,10 +312,135 @@ export class UserService {
           params: { translate: false },
         })
       )?.data?.data;
-      this.logger.log('user', user);
+      const languageCode = user?.languagePreference ?? Languages.ENGLISH;
       const userId = user._id;
       this.logger.log('userId', userId);
-      return getSuccessResponse(await this.orderService.findOrders(userId), HttpResponseMessage.OK);
+      this.logger.log('languageCode', languageCode);
+      const orders = await this.orderService.findOrders(userId, paginationRequest);
+      const itemIds = (orders?.orders as []).map((item) => item['item_id']);
+      const providerIds = (orders?.orders as []).map((item) => item['provider_id']);
+
+      const responseData: any = await this.itemDumpService.findPaginatedItemsForOrders(
+        itemIds,
+        languageCode,
+        1,
+        itemIds.length,
+        '',
+        [],
+      );
+      const translatedItems = responseData.items;
+      // this.logger.log('translatedItems', translatedItems);
+      const translatedOrders = await Promise.all(
+        orders?.orders.map((order) => {
+          const translatedData = translatedItems.find((item) => item['item_id'] === order['item_id']);
+          const mappedOrder = {
+            _id: order._id,
+            order_id: order.order_id,
+            transaction_id: order.transaction_id,
+            domain: order.domain,
+            rating: order.rating,
+            is_added_to_wallet: order.is_added_to_wallet,
+            certificate_url: order?.status == OrderStatus.COMPLETED ? order?.certificate_url : '',
+            status: order.status,
+            item_details: {
+              item_id: order.item_id,
+              provider_name: translatedData?.provider?.name,
+              provider_images: translatedData?.provider?.images,
+              descriptor: {
+                name: translatedData?.descriptor?.name,
+                long_desc: translatedData?.descriptor?.long_desc,
+                short_desc: translatedData?.descriptor?.short_desc,
+                images: translatedData?.descriptor?.images,
+              },
+            },
+            fulfillment: {
+              media: order?.fulfillment?.[0]?.stops?.[0]?.instructions?.media ?? [],
+            },
+          };
+          // this.logger.log('mappedOrder', mappedOrder);
+          return mappedOrder;
+        }),
+      );
+      return getSuccessResponse(
+        {
+          orders: translatedOrders,
+          totalCount: orders?.totalCount,
+          currentSize: paginationRequest.page * paginationRequest.pageSize,
+        },
+        HttpResponseMessage.OK,
+      );
+    } catch (error) {
+      this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
+      throw error?.response?.data;
+    }
+  }
+
+  async getOrderById(token: string, orderId: string) {
+    try {
+      const user: any = (
+        await this.httpService.axiosRef.get(this.getUrl.getUserProfileUrl, {
+          headers: { Authorization: token },
+          params: { translate: false },
+        })
+      )?.data?.data;
+      const languageCode = user?.languagePreference ?? Languages.ENGLISH;
+      const userId = user._id;
+      this.logger.log('userId', userId);
+      this.logger.log('languageCode', languageCode);
+      const order = await this.orderService.findOrderById(userId, orderId);
+      const translatedItem = await this.itemDumpService.findByItemId({ item_id: order?.item_id }, languageCode);
+      const mappedOrder = {
+        ...order._doc,
+        item_details: {
+          ...order?.item_details?._doc,
+          item_id: order.item_id,
+          provider_name: translatedItem?.provider?.name,
+          provider_images: translatedItem?.provider?.images,
+          descriptor: {
+            name: translatedItem?.descriptor?.name,
+            long_desc: translatedItem?.descriptor?.long_desc,
+            short_desc: translatedItem?.descriptor?.short_desc,
+            images: translatedItem?.descriptor?.images,
+          },
+        },
+        certificate_url: order?.status == OrderStatus.COMPLETED ? order?.certificate_url : '',
+      };
+
+      return getSuccessResponse(mappedOrder, HttpResponseMessage.OK);
+    } catch (error) {
+      this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
+      throw error?.response?.data;
+    }
+  }
+
+  async rateOrder(token: string, orderId: string, rateOrderRequest: RateOrderDto) {
+    try {
+      const rateOrder = await this.orderService.rateOrder(orderId, rateOrderRequest);
+      const requestPayload = await this.requestPayloadUtilsService.createRatingPayload(
+        rateOrderRequest.rating,
+        [rateOrder?.item_id],
+        rateOrder?.provider?.id,
+        'items',
+        rateOrder?.order_id,
+        rateOrder?.transaction_id,
+        rateOrder?.domain,
+      );
+      return getSuccessResponse(rateOrder, HttpResponseMessage.OK);
+      this.logger.log('requestPayload', requestPayload);
+      const networkRequest = await this.axiosHttp.post(this.getUrl.rateOrderNetwork, requestPayload, {
+        Authorization: token,
+      });
+      this.logger.log(networkRequest, 'networkRequest');
+    } catch (error) {
+      this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
+      throw error;
+    }
+  }
+
+  async updateIsAddedToWallet(orderId: string) {
+    try {
+      const rateOrder = await this.orderService.updateIsAddedToWallet(orderId, true);
+      return getSuccessResponse(rateOrder, HttpResponseMessage.OK);
     } catch (error) {
       this.logger.error(USER_ERROR_MESSAGES.UPDATE_USER_LANGUAGE_PREFERENCE, error);
       throw error?.response?.data;

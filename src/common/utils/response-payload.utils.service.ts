@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidV4 } from 'uuid';
+import { Certificate } from 'crypto';
+
 import { DomainsEnum, xplorDomain } from '../constants/enums';
 import { initConstants } from '../constants/stg-constants';
 @Injectable()
@@ -8,7 +10,7 @@ export class ResponsePayloadUtilsService {
   scholarshipPayload(responseDto) {
     return {
       data: {
-        transaction_id: uuidV4(),
+        transaction_id: responseDto?.context?.transaction_id,
         item_id: responseDto?.message?.order?.items[0]?.id,
         domain: responseDto?.context?.domain,
         action: responseDto?.context?.action,
@@ -20,7 +22,7 @@ export class ResponsePayloadUtilsService {
   coursePayload(responseDto) {
     return {
       data: {
-        transaction_id: uuidV4(),
+        transaction_id: responseDto?.context?.transaction_id,
         item_id: responseDto?.message?.order?.items[0]?.id,
         domain: responseDto?.context?.domain,
         action: responseDto?.context?.action,
@@ -51,19 +53,37 @@ export class ResponsePayloadUtilsService {
         action: responseDto?.context?.action,
         order_id: responseDto?.message?.order?.id,
         payments: responseDto?.message?.order?.payments,
+        stops: responseDto?.message?.order?.fulfillments[0]?.stops,
       },
     };
   }
 
   statusPayload(responseDto) {
     this.logger.log('responseDto', JSON.stringify(responseDto.message));
+    let certificate_url: string = '';
+    responseDto?.message?.order?.fulfillments?.map((fulfillment) => {
+      return fulfillment?.tags?.map((tag) => {
+        if (tag?.descriptor?.code === 'course-completion-details') {
+          return tag?.list?.map((list) => {
+            if (list?.descriptor?.code === 'course-certificate') {
+              certificate_url = list?.value;
+              return list?.value;
+            }
+          });
+        }
+      });
+    });
     return {
       data: {
         transaction_id: responseDto?.context?.transaction_id,
         domain: responseDto?.context?.domain,
         action: responseDto?.context?.action,
         order_id: responseDto?.message?.order?.id,
-        status: 'APPROVED',
+        status: responseDto?.message?.order?.status,
+        stops: responseDto?.message?.order?.fulfillments[0]?.stops
+          ? responseDto?.message?.order?.fulfillments[0]?.stops
+          : [],
+        certificate_url: certificate_url,
       },
     };
   }

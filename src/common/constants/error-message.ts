@@ -32,7 +32,9 @@ export const WALLET_ERROR_MESSAGES = {
   UPDATE_SHARE_VC_STATUS: 'Error in updating share VC status', // Message for errors during updating the status of a shared VC
   GET_VC_SHARED_REQUESTS_LIST: 'Error in fetching VC shared requests', // Message for errors during fetching VC shared requests
 };
-
+export const ITEM_ERROR_MESSAGES = {
+  ITEM_NOT_FOUND: 'Item not found',
+};
 export const USER_ERROR_MESSAGES = {
   SEND_OTP: 'Error in sending OTP', // Message for errors during sending OTP
   VERIFY_OTP: 'Error in verifying OTP', // Message for errors during verifying OTP

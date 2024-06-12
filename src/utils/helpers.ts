@@ -27,9 +27,22 @@ export const getTransformedItems = (data: RawCatalogueData): TransformedItem[] =
           long_desc: provider?.descriptor?.long_desc?.replace(/<[^>]*>/g, ''),
           short_desc: provider?.descriptor?.short_desc?.replace(/<[^>]*>/g, ''),
         },
+        rating: item.rating,
+        rateable: item.rateable,
+        creator: {
+          name: item?.creator?.descriptor?.name,
+          images: item?.creator?.descriptor?.images,
+          long_desc: item?.creator?.descriptor?.long_desc,
+          short_desc: item?.creator?.descriptor?.short_desc,
+        },
+        tags: item.tags,
       });
     });
   });
 
   return result;
 };
+
+export function stringToBool(str) {
+  return str?.toLowerCase() === 'true';
+}

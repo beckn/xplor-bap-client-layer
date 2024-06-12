@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, ValidateNested, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, ValidateNested, IsOptional, IsArray, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DescriptorDto {
@@ -35,6 +35,36 @@ export class PriceDto {
   value: string;
 }
 
+export class DescriptorDTO {
+  @IsString()
+  code: string;
+
+  @IsString()
+  name: string;
+}
+
+export class ListDTO {
+  @ValidateNested()
+  @Type(() => DescriptorDTO)
+  descriptor: DescriptorDTO;
+
+  @IsString()
+  value: string;
+}
+
+export class ContentMetadataDTO {
+  @ValidateNested()
+  @Type(() => DescriptorDTO)
+  descriptor: DescriptorDTO;
+
+  @ValidateNested({ each: true })
+  @Type(() => ListDTO)
+  list: ListDTO[];
+
+  @IsBoolean()
+  display: boolean;
+}
+
 export class CreateItemDumpDto {
   @IsString()
   @IsNotEmpty()
@@ -64,6 +94,22 @@ export class CreateItemDumpDto {
   @IsNotEmpty()
   provider: DescriptorDto;
 
+  @IsString()
+  @IsNotEmpty()
+  rating: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rateable: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  creator: DescriptorDto;
+
+  @IsOptional()
+  @Type(() => ContentMetadataDTO)
+  tags: ContentMetadataDTO[];
+
   constructor(data: Partial<CreateItemDumpDto>) {
     this.transaction_id = data.transaction_id;
     this.domain = data.domain;
@@ -72,6 +118,10 @@ export class CreateItemDumpDto {
     this.price = data.price;
     this.provider_id = data.provider_id;
     this.provider = data.provider;
+    this.rating = data.rating;
+    this.rateable = data.rateable;
+    this.creator = data.creator;
+    this.tags = data.tags;
   }
 }
 

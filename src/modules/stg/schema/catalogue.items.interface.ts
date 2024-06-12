@@ -18,6 +18,23 @@ export interface TransformedItem {
   price: Price;
   provider_id: string;
   provider: Descriptor;
+  creator: Descriptor;
+  tags: ContentMetadata[];
+  rating: string;
+  rateable: boolean;
+}
+export interface ContentMetadata {
+  descriptor: TagsDescriptor;
+  list: List[];
+  display: boolean;
+}
+export interface List {
+  descriptor: TagsDescriptor;
+  value: string;
+}
+export interface TagsDescriptor {
+  code: string;
+  name: string;
 }
 
 export interface Item {
@@ -30,11 +47,7 @@ export interface Item {
   fulfillment_ids?: string[];
   rating?: string;
   rateable?: boolean;
-  tags?: {
-    descriptor: { code: string; name: string };
-    list: { descriptor: { code: string; name: string }; value: string }[];
-    display?: boolean;
-  }[];
+  tags: ContentMetadata[];
 }
 
 export interface Provider {

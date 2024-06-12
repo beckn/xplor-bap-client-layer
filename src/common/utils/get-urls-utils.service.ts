@@ -49,4 +49,6 @@ export class GetUrl extends ConfigService {
   getDomainsUrl = this.coreServiceUrl + Endpoints.getDomainsUrl;
   getCategoriesUrl = this.coreServiceUrl + Endpoints.getCategoriesUrl;
   updateUserOnCallBackUrl = this.coreServiceUrl + Endpoints.updateUserOnCallBackUrl;
+  updateUserKyc = this.coreServiceUrl + Endpoints.updateUserKyc;
+  rateOrderNetwork = this.coreServiceUrl + Endpoints.rateOrderNetwork;
 }

@@ -55,7 +55,19 @@ export class SpanishItemDump extends Document {
   provider_id: string;
 
   @Prop({ required: true })
+  rating: string;
+
+  @Prop({ required: true })
+  rateable: boolean;
+
+  @Prop({ required: true })
   provider: Descriptor;
+
+  @Prop({ required: true })
+  creator: Descriptor;
+
+  @Prop({ required: true, type: [Object] })
+  tags: Record<any, any>[];
 }
 
 export const SpanishItemModel = SpanishItemDump.name;
