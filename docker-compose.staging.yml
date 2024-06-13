@@ -1,0 +1,17 @@
+version: '3'
+services:
+  xplor_il_backend_service:
+    container_name: implementation-layer-nest-backend
+    build: .
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+      - CORE_SERVICE_URL=${CORE_SERVICE_URL}
+    ports:
+      - 1106:${PORT}
+    restart: always
+
+networks:
+  xplor-network:
+    external: true

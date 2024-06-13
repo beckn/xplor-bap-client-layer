@@ -20,6 +20,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-extra-semi': 'off',
     'no-extra-semi': 'off',
+    'no-useless-catch': 'off',
     'no-console': 'warn',
     'padding-line-between-statements': [
       'error',
@@ -32,7 +33,7 @@ module.exports = {
         next: ['const', 'let', 'var'],
       },
     ],
-    'no-unused-vars':'off',
+    'no-unused-vars': 'off',
     'id-match': 0,
 
     // Turn on prettier rules
@@ -51,4 +52,4 @@ module.exports = {
       },
     ],
   },
-}
+};

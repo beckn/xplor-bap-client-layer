@@ -1,11 +1,50 @@
-version: "3"
+version: '3'
 services:
-  backend:
+  xplor_il_backend_service:
+    logging:
+      driver: 'file-log-driver'
+      options:
+        fpath: '/docker/xplor_il_backend_service.log'
     container_name: implementation-layer-nest-backend
     build: .
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+      - CORE_SERVICE_URL=${CORE_SERVICE_URL}
+      - STG_SERVICE_URL=${STG_SERVICE_URL}
+      - ES_SERVICE_URL=${ES_SERVICE_URL}
+      - ES_USERNAME=${ES_USERNAME}
+      - ES_PASSWORD=${ES_PASSWORD}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
     ports:
-     - 1106:3000
+      - 1106:${PORT}
     restart: always
+    networks:
+      - xplor-network
+  xplor-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    container_name: xplor-elasticsearch
+    ports:
+      - 1108:9200
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS="-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - xplor-elasticsearch:/data
+    restart: always
+    networks:
+      - xplor-network
 
-
-    
+volumes:
+  xplor-elasticsearch:
+networks:
+  xplor-network:
+    external: true 
