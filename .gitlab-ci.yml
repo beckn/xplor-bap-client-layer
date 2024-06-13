@@ -24,7 +24,7 @@ deploy-stage:
     - sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP  "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
     - sshpass -p $XPLOR_STAGE_PASSWORD scp .env $Xplor_Username@$XPLOR_STAGE_IP:/home/ubuntu/$CI_PROJECT_NAME
     - sshpass -p $XPLOR_STAGE_PASSWORD ssh -tt $Xplor_Username@$XPLOR_STAGE_IP  "
-        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose up -d --build "
+        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose -f docker-compose-staging.yml up -d --build "
     - echo "https://implementation-layer-stage.thewitslab.com" 
 
 .deploy-prod:
