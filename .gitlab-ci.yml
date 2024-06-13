@@ -33,13 +33,15 @@ deploy-stage:
   tags:
     - gcp
   script:
+    - docker image prune -af
+    - docker builder prune -f
     - echo "Deployment on xplor-prod Server."
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh prod $CI_PROJECT_NAME-prod $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path
     - |
       sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP "
-        if [[ -d $CI_PROJECT_NAME ]]; then
+        if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose down
           cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
