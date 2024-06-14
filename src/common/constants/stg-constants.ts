@@ -125,7 +125,7 @@ export const confirmBilling = (user: IUserInfo) => ({
 export enum OrderStatus {
   NOT_STARTED = 'NOT_STARTED',
   STARTED = 'STARTED',
-  IN_PROGRESS = 'IN-PROGRESS',
+  IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
   SUBMITTED = 'SUBMITTED',
   REJECTED = 'REJECTED',

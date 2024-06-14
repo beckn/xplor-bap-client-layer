@@ -73,6 +73,13 @@ export class ItemDumpService {
           enrolled: {
             $cond: { if: { $gt: [{ $size: '$orders' }, 0] }, then: true, else: false },
           },
+          status: {
+            $cond: {
+              if: { $gt: [{ $size: '$orders' }, 0] },
+              then: { $arrayElemAt: ['$orders.status', 0] },
+              else: null,
+            },
+          },
         },
       },
       { $unset: 'orders' },
@@ -99,6 +106,7 @@ export class ItemDumpService {
 
   async bulkWrite(bulkCreateItemDumpDto: BulkCreateItemDumpDto, language: string) {
     const model = this.getModel(language);
+    this.logger.log(`BulkWrite ${JSON.stringify(bulkCreateItemDumpDto.items)}`);
     const bulkOperations = bulkCreateItemDumpDto.items.map((item: CreateItemDumpDto) => ({
       updateOne: {
         filter: { item_id: item.item_id },
@@ -243,6 +251,11 @@ export class ItemDumpService {
                 },
               },
             },
+            {
+              $project: {
+                status: 1,
+              },
+            },
           ],
           as: 'orders',
         },
@@ -251,6 +264,13 @@ export class ItemDumpService {
         $addFields: {
           enrolled: {
             $cond: { if: { $gt: [{ $size: '$orders' }, 0] }, then: true, else: false },
+          },
+          status: {
+            $cond: {
+              if: { $gt: [{ $size: '$orders' }, 0] },
+              then: { $arrayElemAt: ['$orders.status', 0] },
+              else: null,
+            },
           },
         },
       },
@@ -280,7 +300,7 @@ export class ItemDumpService {
 
     const totalCount = totalCountResult;
 
-    this.logger.log({ totalCount, transaction_id: uuidV4(), skip, limit, items });
+    // this.logger.log({ totalCount, transaction_id: uuidV4(), skip, limit, items });
 
     return { totalCount, transaction_id: uuidV4(), skip, limit, items };
   }
