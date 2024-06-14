@@ -228,6 +228,8 @@ export class StgService {
                     creator_long_desc: item['creator']['long_desc'] ?? '',
                     creator_images:
                       item['creator']['images'].length > 0 ? JSON.stringify(item['creator']['images']) : '',
+                    item_rating: item.rating ?? '0',
+                    item_rateable: stringToBool(item.rateable) || false,
                   };
                   return itemData;
                 }),
@@ -270,6 +272,8 @@ export class StgService {
                         long_desc: item['creator_long_desc'],
                         images: item['creator_images'] === '' ? [] : JSON.parse(item['creator_images']),
                       },
+                      rating: item['item_rating'] ?? '0',
+                      rateable: stringToBool(item['item_rateable']) ?? true,
                       tags:
                         tags.length > 0
                           ? [

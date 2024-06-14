@@ -44,5 +44,5 @@ export const getTransformedItems = (data: RawCatalogueData): TransformedItem[] =
 };
 
 export function stringToBool(str) {
-  return str?.toLowerCase() === 'true';
+  return str?.toString().toLowerCase() === 'true';
 }
