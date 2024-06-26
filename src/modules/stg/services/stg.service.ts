@@ -696,7 +696,6 @@ export class StgService {
       ) {
         const payload = this.sendPayloadService.createConfirmPayload(searchRequestDto?.data?.course);
         this.logger.debug('searchRequestDto?.context', searchRequestDto?.context);
-sendDataToClients(searchRequestDto?.context?.transaction_id, payload.data, connectedClients);
         const createOrderPayload = this.sendPayloadService.createOrderPayload(searchRequestDto?.data?.course);
         const userId = this.userTransactions.get(payload.data.transaction_id);
         this.logger.log('userId in onConfirm', userId);
