@@ -696,7 +696,7 @@ export class StgService {
       ) {
         const payload = this.sendPayloadService.createConfirmPayload(searchRequestDto?.data?.course);
         this.logger.debug('searchRequestDto?.context', searchRequestDto?.context);
-        sendDataToClients(searchRequestDto?.context?.transaction_id, payload.data, connectedClients);
+sendDataToClients(searchRequestDto?.context?.transaction_id, payload.data, connectedClients);
         const createOrderPayload = this.sendPayloadService.createOrderPayload(searchRequestDto?.data?.course);
         const userId = this.userTransactions.get(payload.data.transaction_id);
         this.logger.log('userId in onConfirm', userId);
@@ -712,6 +712,7 @@ export class StgService {
           is_added_to_wallet: false,
           certificate_url: '',
         });
+        sendDataToClients(searchRequestDto?.context?.transaction_id, payload.data, connectedClients);
       }
     } catch (error) {
       throw error?.response;
@@ -736,13 +737,13 @@ export class StgService {
       ) {
         const payload = this.sendPayloadService.statusPayload(onStatusRequestDto?.data?.course);
         this.logger.log('payload=======', JSON.stringify(payload));
-        sendDataToClients(onStatusRequestDto?.context?.transaction_id, payload.data, connectedClients);
         const order_id = payload?.data?.order_id;
         const certificate_url = payload?.data?.certificate_url;
         await this.orderService.updateOrder(order_id, {
           certificate_url: certificate_url,
           status: payload?.data?.status,
         });
+        sendDataToClients(onStatusRequestDto?.context?.transaction_id, payload.data, connectedClients);
       }
 
       return onStatusRequestDto;
