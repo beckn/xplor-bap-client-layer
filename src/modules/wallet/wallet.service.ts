@@ -166,6 +166,40 @@ export class WalletService {
     }
   }
 
+  // Method to upload a file to the wallet
+  async uploadCertificate(token: string, body: any) {
+    try {
+      const formData = new FormData();
+      formData.append('walletId', body.walletId);
+      formData.append('category', body.category);
+      const bodyTags = body.tags;
+      bodyTags.map((tag: string, i: number) => {
+        formData.append(`tags[${i}]`, tag);
+      });
+
+      formData.append('iconUrl', body.iconUrl);
+      formData.append('name', body.name);
+      formData.append('fileUrl', body.fileUrl);
+      // formData.append('metadata', JSON.stringify(body.metadata));
+
+      // Make a POST request to upload the file
+      const response = (
+        await this.httpService.axiosRef.post(this.getUrl.getVcWalletCertificateUploadUrl, formData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
+        })
+      )?.data;
+
+      return response;
+    } catch (error) {
+      // Log the error and throw it
+      this.logger.error(WALLET_ERROR_MESSAGES.UPLOAD_FILE, error);
+      throw error?.response?.data;
+    }
+  }
+
   async shareVc(token: string, queryParams: QueryWalletVcsDto, body: ShareVcRequestDto) {
     try {
       // Make a POST request to share a VC

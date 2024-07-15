@@ -29,7 +29,10 @@ export class WalletController {
   ) {
     return this.walletService.uploadFile(token, file, body);
   }
-
+  @Post('file/certificate')
+  async uploadCertificateToWallet(@ExtractToken() token: string, @Body() body: any) {
+    return this.walletService.uploadCertificate(token, body);
+  }
   // Endpoint to get wallet verifiable credentials (VCs)
   @Get('vcs')
   getWalletVcs(@ExtractToken() token: string, @Query() walletVcQueryDto: WalletVcQueryDto) {

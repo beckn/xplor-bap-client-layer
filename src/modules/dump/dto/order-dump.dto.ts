@@ -23,6 +23,12 @@ export class OrderDto {
   @IsNotEmpty()
   item_details: string;
 
+  @IsOptional()
+  paymentId?: string;
+
+  @IsOptional()
+  paymentStatus?: string;
+
   @IsNotEmpty()
   billing: Record<string, any>;
 

@@ -27,4 +27,6 @@ export default () => ({
   ES_PASSWORD: Joi.string().required().default(EnvDefaultValues.ES_PASSWORD),
   KAFKA_CLIENT_ID: Joi.string().required().default(EnvDefaultValues.KAFKA_CLIENT_ID),
   KAFKA_GROUP_ID: Joi.string().required().default(EnvDefaultValues.KAFKA_GROUP_ID),
+  IL_BASE_URL: Joi.string().required().default(EnvDefaultValues.IL_BASE_URL),
+  GCL_BASE_URL: Joi.string().required().default(EnvDefaultValues.IL_BASE_URL),
 });

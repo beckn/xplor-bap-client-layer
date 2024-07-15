@@ -21,6 +21,8 @@ export interface TransformedItem {
   creator: Descriptor;
   tags: ContentMetadata[];
   rating: string;
+  bpp_id: string;
+  bpp_uri: string;
   rateable: boolean;
 }
 export interface ContentMetadata {
@@ -47,6 +49,8 @@ export interface Item {
   fulfillment_ids?: string[];
   rating?: string;
   rateable?: boolean;
+  bpp_id?: string;
+  bpp_uri?: string;
   tags: ContentMetadata[];
 }
 

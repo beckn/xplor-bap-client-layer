@@ -27,7 +27,7 @@ import { Languages } from '../../common/constants/enums';
 import { ItemDumpService } from '../dump/service/item-dump.service';
 import { GetOrdersQueryDto } from './dto/get-orders-query.dto';
 import { RateOrderDto } from './dto/rate.order';
-import { OrderStatus, fulfillments } from '../../common/constants/stg-constants';
+import { OrderStatus } from '../../common/constants/stg-constants';
 import { AxiosService } from '../../common/axios/axios.service';
 import { RequestPayloadUtilsService } from '../../common/utils/request-payload.utils.service';
 
@@ -318,7 +318,7 @@ export class UserService {
       this.logger.log('languageCode', languageCode);
       const orders = await this.orderService.findOrders(userId, paginationRequest);
       const itemIds = (orders?.orders as []).map((item) => item['item_id']);
-      const providerIds = (orders?.orders as []).map((item) => item['provider_id']);
+      // const providerIds = (orders?.orders as []).map((item) => item['provider_id']);
 
       const responseData: any = await this.itemDumpService.findPaginatedItemsForOrders(
         itemIds,
@@ -416,14 +416,13 @@ export class UserService {
   async rateOrder(token: string, orderId: string, rateOrderRequest: RateOrderDto) {
     try {
       const rateOrder = await this.orderService.rateOrder(orderId, rateOrderRequest);
+      const itemDetails = await this.itemDumpService.findByItemId({ item_id: rateOrder.item_id }, Languages.ENGLISH);
       const requestPayload = await this.requestPayloadUtilsService.createRatingPayload(
         rateOrderRequest.rating,
-        [rateOrder?.item_id],
-        rateOrder?.provider?.id,
         'items',
         rateOrder?.order_id,
-        rateOrder?.transaction_id,
         rateOrder?.domain,
+        itemDetails,
       );
       return getSuccessResponse(rateOrder, HttpResponseMessage.OK);
       this.logger.log('requestPayload', requestPayload);

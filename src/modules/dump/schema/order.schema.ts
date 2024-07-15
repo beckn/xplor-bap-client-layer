@@ -7,7 +7,7 @@ import { OrderStatus } from '../../../common/constants/stg-constants';
 export class Order extends Document {
   @Prop({ default: () => `order_${uuidv4()}` })
   _id: string;
-  @Prop({ required: true })
+  @Prop()
   order_id: string;
 
   @Prop({ required: true })
@@ -42,6 +42,12 @@ export class Order extends Document {
 
   @Prop({ type: Object })
   rating: Record<string, any>;
+
+  @Prop({ type: String })
+  paymentId: Record<string, any>;
+
+  @Prop({ type: String })
+  paymentStatus: Record<string, any>;
 
   @Prop({ type: Boolean, default: false, required: false })
   is_added_to_wallet: boolean;

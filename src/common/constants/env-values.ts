@@ -14,4 +14,5 @@ export const EnvDefaultValues = {
   ES_PASSWORD: 'elastic',
   KAFKA_CLIENT_ID: 'xplore',
   KAFKA_GROUP_ID: 'xplore',
+  IL_BASE_URL: 'http://localhost:8000',
 };

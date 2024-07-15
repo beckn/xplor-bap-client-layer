@@ -19,6 +19,8 @@ services:
       - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
       - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - IL_BASE_URL=${IL_BASE_URL}
+      - GCL_BASE_URL=${GCL_BASE_URL}
     ports:
       - 1106:${PORT}
     restart: always
@@ -47,4 +49,4 @@ volumes:
   xplor-elasticsearch:
 networks:
   xplor-network:
-    external: true 
+    external: true

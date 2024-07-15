@@ -132,3 +132,16 @@ export enum OrderStatus {
   APPROVED = 'APPROVED',
   TILL_IN_PROGRESS = 'TILL_IN_PROGRESS',
 }
+
+export enum ActionMessage {
+  Search = 'Search Call Initiated',
+  Select = 'Select Call Initiated',
+  Init = 'Init Call Initiated',
+  Confirm = 'Confirm Call Initiated',
+  Status = 'Status Call Initiated',
+  track = 'Track Call Initiated',
+  Rate = 'Rate Call Initiated',
+  Update = 'Update Call Initiated',
+  Cancel = 'Cancel Call Initiated',
+  Support = 'Support Call Initiated',
+}
