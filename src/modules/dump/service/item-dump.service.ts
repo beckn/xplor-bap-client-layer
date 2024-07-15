@@ -128,6 +128,8 @@ export class ItemDumpService {
               short_desc: item.provider.short_desc,
             },
             transaction_id: item.transaction_id,
+            bpp_id: item.bpp_id,
+            bpp_uri: item.bpp_uri,
             rating: item.rating,
             rateable: item.rateable,
             creator:

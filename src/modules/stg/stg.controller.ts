@@ -9,6 +9,12 @@ import { SseConnectedMessage } from '../../common/constants/response-message';
 import { ExtractToken } from '../../common/decorators/extract-token.decorator';
 import { StatusRequestDto } from './dto/status-request.dto';
 import { ExtractUserId } from 'src/common/decorators/extract-userId';
+import { RateRequestDto } from './dto/rate-request.dto';
+import { CancelRequestDto } from './dto/cancel-request.dto';
+import { UpdateRequestDto } from './dto/update-request.dto';
+import { SupportRequestDto } from './dto/support-request.dto';
+import { TrackRequestDto } from './dto/track-request.dto';
+import { GclSearchRequestDto } from './dto/gcl-search-request.dto';
 
 @Controller({ version: '1', path: 'stg' })
 @Injectable()
@@ -30,6 +36,23 @@ export class StgController {
     @Body() searchRequestDto: SearchRequestDto,
   ) {
     return this.stgService.search(paginationRequest, searchRequestDto, userId);
+  }
+
+  @Post('gcl_search')
+  gclSearch(@Body() gclSearchRequestDto: GclSearchRequestDto) {
+    return this.stgService.gclSearch(gclSearchRequestDto);
+  }
+
+  @Post('on_search')
+  onSearch(@Body() onSearchResponse: any) {
+    try {
+      // Bind the context of sendDataToClients to this instance
+      this.logger.log('on_search_data', onSearchResponse);
+      this.stgService.onSearch(onSearchResponse, this.connectedClients, this.sendDataToClients);
+      return true;
+    } catch (error) {
+      throw error?.message;
+    }
   }
 
   @Post('select')
@@ -77,6 +100,31 @@ export class StgController {
     return this.stgService.status(token, statusRequestDto);
   }
 
+  @Post('rate')
+  rate(@ExtractToken() token: string, @Body() rateRequestDto: RateRequestDto) {
+    return this.stgService.rate(token, rateRequestDto);
+  }
+
+  @Post('cancel')
+  cancel(@ExtractToken() token: string, @Body() cancelRequestDto: CancelRequestDto) {
+    return this.stgService.cancel(token, cancelRequestDto);
+  }
+
+  @Post('update')
+  update(@ExtractToken() token: string, @Body() updateRequestDto: UpdateRequestDto) {
+    return this.stgService.update(token, updateRequestDto);
+  }
+
+  @Post('support')
+  support(@ExtractToken() token: string, @Body() supportRequestDto: SupportRequestDto) {
+    return this.stgService.support(token, supportRequestDto);
+  }
+
+  @Post('track')
+  track(@ExtractToken() token: string, @Body() trackRequestDto: TrackRequestDto) {
+    return this.stgService.track(token, trackRequestDto);
+  }
+
   @Post('on_confirm')
   onConfirm(@Body() onConfirmResponse: any) {
     // Bind the context of sendDataToClients to this instance
@@ -88,6 +136,31 @@ export class StgController {
   onStatus(@Body() statusResponse: any) {
     // Bind the context of sendDataToClients to this instance
     return this.stgService.onStatus(statusResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_rating')
+  onRate(@Body() onRatingResponse: any) {
+    return this.stgService.onRate(onRatingResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_cancel')
+  onCancel(@Body() onCancelResponse: any) {
+    return this.stgService.onCancel(onCancelResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_update')
+  onUpdate(@Body() onUpdateResponse: any) {
+    return this.stgService.onUpdate(onUpdateResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_track')
+  onTrack(@Body() onTrackResponse: any) {
+    return this.stgService.onTrack(onTrackResponse, this.connectedClients, this.sendDataToClients);
+  }
+
+  @Post('on_support')
+  onSupport(@Body() onSupportResponse: any) {
+    return this.stgService.onTrack(onSupportResponse, this.connectedClients, this.sendDataToClients);
   }
 
   @Get('sse')

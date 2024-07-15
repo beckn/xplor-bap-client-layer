@@ -1,5 +1,6 @@
 import { IsString, IsNotEmpty, ValidateNested, IsOptional, IsArray, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Tag } from '../../stg/schema/gcl-catalogue.items.interface';
 
 export class DescriptorDto {
   @IsString()
@@ -75,6 +76,14 @@ export class CreateItemDumpDto {
   item_id: string;
 
   @IsString()
+  @IsOptional()
+  bpp_id: string;
+
+  @IsString()
+  @IsOptional()
+  bpp_uri: string;
+
+  @IsString()
   @IsNotEmpty()
   domain: string;
 
@@ -106,9 +115,13 @@ export class CreateItemDumpDto {
   @IsNotEmpty()
   creator: DescriptorDto;
 
+  // @IsOptional()
+  // @Type(() => ContentMetadataDTO)
+  // tags: ContentMetadataDTO[];
+
   @IsOptional()
   @Type(() => ContentMetadataDTO)
-  tags: ContentMetadataDTO[];
+  tags: Tag[];
 
   constructor(data: Partial<CreateItemDumpDto>) {
     this.transaction_id = data.transaction_id;
@@ -122,6 +135,8 @@ export class CreateItemDumpDto {
     this.rateable = data.rateable;
     this.creator = data.creator;
     this.tags = data.tags;
+    this.bpp_id = data.bpp_id;
+    this.bpp_uri = data.bpp_uri;
   }
 }
 

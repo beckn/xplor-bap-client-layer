@@ -10,18 +10,36 @@ export class GetUrl extends ConfigService {
   // URLs from environment variables.
   coreServiceUrl = this.get('coreServiceUrl');
   stgServiceUrl = this.get('stgServiceUrl');
+  ilServiceUrl = this.get('ilBaseUrl');
+  gclServiceUrl = this.get('gclBaseUrl');
+
   getProvidersUrl = this.coreServiceUrl + Endpoints.getProviderUrl;
   getStgSearchUrl = this.coreServiceUrl + Endpoints.getStgSearchUrl;
   getStgSelectUrl = this.coreServiceUrl + Endpoints.getStgSelectUrl;
+  getPaymentLink = this.coreServiceUrl + Endpoints.getPaymentLink;
+
+  verifyPayment = this.coreServiceUrl + Endpoints.verifyPayment;
 
   getStgInitUrl = this.coreServiceUrl + Endpoints.getStgInitUrl;
   getStgConfirmUrl = this.coreServiceUrl + Endpoints.getStgConfirmUrl;
   getStgStatusUrl = this.coreServiceUrl + Endpoints.getStgStatusUrl;
 
+  getGclSearchUrl = this.coreServiceUrl + Endpoints.getGclSearchUrl;
+  getGclSelectUrl = this.coreServiceUrl + Endpoints.getGclSelectUrl;
+  getGclInitUrl = this.coreServiceUrl + Endpoints.getGclInitUrl;
+  getGclConfirmUrl = this.coreServiceUrl + Endpoints.getGclConfirmUrl;
+  getGclStatusUrl = this.coreServiceUrl + Endpoints.getGclStatusUrl;
+  getGclRateUrl = this.coreServiceUrl + Endpoints.getGclRateUrl;
+  getGclCancelUrl = this.coreServiceUrl + Endpoints.getGclCancelUrl;
+  getGclUpdateUrl = this.coreServiceUrl + Endpoints.getGclUpdateUrl;
+  getGclSupportUrl = this.coreServiceUrl + Endpoints.getGclSupportUrl;
+  getGclTrackUrl = this.coreServiceUrl + Endpoints.getGclTrackUrl;
+
   getWalletUrl = this.coreServiceUrl + Endpoints.getWalletUrl;
   getWalletVcsUrl = this.coreServiceUrl + Endpoints.getWalletVcsUrl;
   getWalletVcUrl = this.coreServiceUrl + Endpoints.getWalletVcUrl;
   getVcWalletFileUploadUrl = this.coreServiceUrl + Endpoints.getVcWalletFileUploadUrl;
+  getVcWalletCertificateUploadUrl = this.coreServiceUrl + Endpoints.getVcWalletCertificateUploadUrl;
   getShareVcUrl = this.coreServiceUrl + Endpoints.getShareVcUrl;
   getSharedVcUrl = this.coreServiceUrl + Endpoints.getSharedVcUrl;
   updateSharedVcUrl = this.coreServiceUrl + Endpoints.updateSharedVcUrl;
@@ -43,6 +61,7 @@ export class GetUrl extends ConfigService {
   subscribeToKafkaCatalogue = this.stgServiceUrl + Endpoints.getDevicePreferenceUrl;
   subscribeToKafkaTranslation = this.stgServiceUrl + Endpoints.getDevicePreferenceUrl;
   getSearchItems = this.stgServiceUrl + Endpoints.getSearchItems;
+  gclSearchItems = this.coreServiceUrl + Endpoints.getGclSearchItems;
   getSupportedLanguageUrl = this.coreServiceUrl + Endpoints.getSupportedLanguageUrl;
   getTranslateLanguageUrl = this.coreServiceUrl + Endpoints.getTranslateLanguageUrl;
   getLanguagesForUserUrl = this.coreServiceUrl + Endpoints.getLanguagesForUserUrl;
@@ -51,4 +70,5 @@ export class GetUrl extends ConfigService {
   updateUserOnCallBackUrl = this.coreServiceUrl + Endpoints.updateUserOnCallBackUrl;
   updateUserKyc = this.coreServiceUrl + Endpoints.updateUserKyc;
   rateOrderNetwork = this.coreServiceUrl + Endpoints.rateOrderNetwork;
+  getPaymentVerifyUrl = this.ilServiceUrl + Endpoints.getPaymentVerifyUrl;
 }

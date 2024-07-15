@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DomainsEnum, xplorDomain } from '../constants/enums';
-import { billing, confirmBilling, confirmFulfillments, fulfillments } from '../constants/stg-constants';
 import { IUserInfo } from '../interfaces/user-info';
 import { SelectRequestDto } from '../../modules/stg/dto/select-request-dto';
 import { ConfirmRequestDto } from '../../modules/stg/dto/confirm-request.dto';
 import { InitRequestDto } from '../../modules/stg/dto/init-request.dto';
 import { StatusRequestDto } from '../../modules/stg/dto/status-request.dto';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class RequestPayloadUtilsService {
+  constructor(private readonly configService: ConfigService) {}
   createSearchPayload() {
     return {};
   }
@@ -17,167 +18,270 @@ export class RequestPayloadUtilsService {
     return error?.message;
   }
 
-  createSelectPayload(selectRequestDto: SelectRequestDto) {
-    return {
-      context: {
-        transaction_id: selectRequestDto.transaction_id,
-        domain: this.getXplorDomain(selectRequestDto.domain),
-        message_id: uuidv4(),
-      },
-      message: {
-        order: {
-          items_id: [selectRequestDto.item_id],
-          provider_id: selectRequestDto.provider_id,
+  createGclSearchPayload(gclSearchRequestDto: any) {
+    try {
+      return {
+        context: {
+          domain: gclSearchRequestDto?.domain,
         },
-      },
-    };
+        searchString: gclSearchRequestDto?.query,
+      };
+    } catch (error) {
+      return error;
+    }
   }
+  createSelectPayload(selectRequestDto: SelectRequestDto, itemDetails: any) {
+    const context = itemDetails?.context ? JSON.parse(itemDetails?.context) : null;
 
-  createInitPayload(initRequestDto: InitRequestDto, userInfo: IUserInfo) {
     return {
-      context: {
-        transaction_id: initRequestDto.transaction_id,
-        domain: this.getXplorDomain(initRequestDto.domain),
-        message_id: uuidv4(),
-        ttl: 'PT10M',
-      },
-      message: {
-        order: {
-          items_id: [initRequestDto.item_id],
-          provider_id: initRequestDto.provider_id,
-          billing: userInfo
-            ? {
-                id: uuidv4(),
-                name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Doe',
-                phone: userInfo?.phoneNumber || '+91-9663088848',
-                email: userInfo?.kyc?.email || 'jane.doe@example.com',
-                address: userInfo?.kyc?.address || 'No 27, XYZ Lane, etc',
-              }
-            : { ...billing, id: uuidv4() },
-          fulfillment: userInfo
-            ? [
-                {
-                  id: uuidv4(),
-                  customer: {
-                    person: {
-                      name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Jane Doe',
-                      age: '13',
-                      gender: userInfo?.kyc?.gender || 'M',
-                      tags: [
-                        {
-                          descriptor: {
-                            code: 'professional-details',
-                            name: 'Professional Details',
-                          },
-                          list: [
-                            {
-                              descriptor: {
-                                code: 'profession',
-                                name: 'profession',
-                              },
-                              value: 'student',
-                            },
-                          ],
-                          display: true,
-                        },
-                      ],
-                    },
-                    contact: {
-                      phone: userInfo?.phoneNumber || '+91-9663088848',
-                      email: userInfo?.kyc?.email || 'jane.doe@example.com',
-                    },
-                  },
+      data: [
+        {
+          context: {
+            transaction_id: selectRequestDto.transaction_id,
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+            domain: selectRequestDto.domain,
+          },
+          message: {
+            orders: [
+              {
+                provider: {
+                  id: selectRequestDto.provider_id,
                 },
-              ]
-            : fulfillments,
-        },
-      },
-    };
-  }
-
-  createConfirmPayload(confirmRequestDto: ConfirmRequestDto, user: IUserInfo) {
-    return {
-      context: {
-        transaction_id: confirmRequestDto.transaction_id,
-        domain: this.getXplorDomain(confirmRequestDto.domain),
-        message_id: uuidv4(),
-      },
-      message: {
-        order: {
-          items_id: [confirmRequestDto.item_id],
-          provider_id: confirmRequestDto.provider_id,
-          billing: { ...confirmBilling(user), id: uuidv4() },
-          fulfillments: confirmFulfillments(user),
-          payments:
-            confirmRequestDto.domain === DomainsEnum.SCHOLARSHIP_DOMAIN
-              ? [
+                items: [
                   {
-                    params: {
-                      bank_code: 'IFSC_Code_Of_the_bank',
-                      bank_account_number: '121212121212',
-                      bank_account_name: 'Account Holder Name',
-                    },
-                  },
-                ]
-              : [
-                  {
-                    params: {
-                      amount: '150',
-                      currency: 'INR',
-                    },
-                    status: 'PAID',
+                    id: selectRequestDto.item_id,
                   },
                 ],
+              },
+            ],
+          },
         },
-      },
+      ],
     };
   }
 
-  createStatusPayload(confirmRequestDto: StatusRequestDto) {
+  createInitPayload(initRequestDto: InitRequestDto, userInfo: IUserInfo, itemDetails: any) {
+    try {
+      return {
+        data: [
+          {
+            context: {
+              transaction_id: initRequestDto.transaction_id,
+              bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+              bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+              domain: initRequestDto.domain,
+            },
+            message: {
+              orders: [
+                {
+                  provider: {
+                    id: initRequestDto.provider_id,
+                  },
+                  items: [
+                    {
+                      id: initRequestDto.item_id,
+                    },
+                  ],
+                  fulfillments: [
+                    {
+                      id: uuidv4(),
+                      customer: {
+                        person: {
+                          name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Jane Doe',
+                          email: userInfo.kyc?.email ?? 'janedoe@gmail.com',
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  createConfirmPayload(confirmRequestDto: ConfirmRequestDto, userInfo: IUserInfo, itemDetails: any) {
     return {
-      context: {
-        transaction_id: confirmRequestDto.transaction_id,
-        domain: this.getXplorDomain(confirmRequestDto.domain),
-        message_id: uuidv4(),
-        ttl: 'PT10M',
-      },
-      message: {
-        order: {
-          id: confirmRequestDto.order_id,
+      data: [
+        {
+          context: {
+            transaction_id: confirmRequestDto.transaction_id,
+            domain: confirmRequestDto.domain,
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+          },
+          message: {
+            orders: [
+              {
+                provider: {
+                  id: confirmRequestDto.provider_id,
+                },
+                items: [
+                  {
+                    id: confirmRequestDto.item_id,
+                  },
+                ],
+                fulfillments: [
+                  {
+                    id: uuidv4(),
+                    customer: {
+                      person: {
+                        name: userInfo?.kyc?.firstName + ' ' + userInfo?.kyc?.lastName || 'Jane Doe',
+                        email: userInfo.kyc?.email ?? 'janedoe1@gmail.com',
+                      },
+                      contact: {
+                        phone: userInfo?.phoneNumber,
+                        email: userInfo.kyc?.email ?? 'janedoe2@gmail.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
         },
-      },
+      ],
     };
   }
 
-  createRatingPayload(
-    rating: string,
-    items_id: string[],
-    provider_id: string,
-    rating_category: string,
-    order_id: string,
-    transaction_id: string,
+  createStatusPayload(statusRequestDto: StatusRequestDto, itemDetails: any) {
+    return {
+      data: [
+        {
+          context: {
+            transaction_id: statusRequestDto.transaction_id,
+            domain: statusRequestDto.domain,
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+          },
+          message: {
+            order_id: statusRequestDto.order_id,
+          },
+        },
+      ],
+    };
+  }
+
+  createRatingPayload(rating: string, rating_category: string, order_id: string, domain: string, itemDetails: any) {
+    return {
+      data: [
+        {
+          context: {
+            domain: this.getXplorDomain(domain),
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+          },
+          message: {
+            ratings: [
+              {
+                id: order_id,
+                rating_category: rating_category,
+                value: rating,
+              },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
+  createCancelPayload(
+    transactionId: string,
+    cancellationReasonId: string,
+    orderId: string,
     domain: string,
+    itemDetails: any,
   ) {
     return {
-      context: {
-        transaction_id: transaction_id,
-        domain: domain,
-        message_id: uuidv4(),
-        ttl: 'PT10M',
-      },
-      message: {
-        order: {
-          id: order_id,
-          items_id: items_id,
-          provider_id: provider_id,
-          rating_category: rating_category,
-          value: rating,
+      data: [
+        {
+          context: {
+            domain: domain,
+            transaction_id: transactionId,
+          },
+          message: {
+            order_id: orderId,
+            cancellation_reason_id: cancellationReasonId,
+          },
         },
-      },
+      ],
     };
   }
+
+  createUpdatePayload(transactionId: string, name: string, orderId: string, domain: string, itemDetails: any) {
+    return {
+      data: [
+        {
+          context: {
+            domain: this.getXplorDomain(domain),
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+            transaction_id: transactionId,
+          },
+          order_id: orderId,
+          updateDetails: {
+            updateTarget: 'order.fulfillments[0].customer.person.name',
+            fulfillments: [
+              {
+                customer: {
+                  person: {
+                    name: name,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
+  createSupportPayload(transactionId: string, ref_id: string, orderId: string, domain: string, itemDetails: any) {
+    return {
+      data: [
+        {
+          context: {
+            domain: this.getXplorDomain(domain),
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+            transaction_id: transactionId,
+          },
+          message: {
+            support: {
+              ref_id: ref_id,
+            },
+          },
+        },
+      ],
+    };
+  }
+
+  createTrackPayload(transactionId: string, callbackUrl: string, orderId: string, domain: string, itemDetails: any) {
+    return {
+      data: [
+        {
+          context: {
+            domain: this.getXplorDomain(domain),
+            bpp_id: itemDetails?.bpp_id ? itemDetails?.bpp_id : this.configService.get('BELEM_BPP_ID'),
+            bpp_uri: itemDetails?.bpp_uri ? itemDetails?.bpp_uri : this.configService.get('BELEM_BPP_URI'),
+            transaction_id: transactionId,
+          },
+          orderId: orderId,
+          callbackUrl: callbackUrl,
+        },
+      ],
+    };
+  }
+
   getXplorDomain(domain: string) {
     switch (domain) {
+      case DomainsEnum.DSEP_COURSES:
+        return xplorDomain.COURSE;
       case DomainsEnum.COURSE_DOMAIN:
         return xplorDomain.COURSE;
       case DomainsEnum.JOB_DOMAIN:
@@ -192,7 +296,7 @@ export class RequestPayloadUtilsService {
         return xplorDomain.SCHOLARSHIP;
 
       default:
-        return 'dsep-belem:courses';
+        return 'learning:dsep:belem';
     }
   }
 }

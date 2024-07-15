@@ -14,6 +14,7 @@ export class TranslateService {
       this.logger.log('response', response);
       return response;
     } catch (error) {
+      this.logger.error('error', error);
       throw error;
     }
   }

@@ -66,6 +66,12 @@ export class SpanishItemDump extends Document {
   @Prop({ required: true })
   creator: Descriptor;
 
+  @Prop({ required: false })
+  bpp_id: string;
+
+  @Prop({ required: false })
+  bpp_uri: string;
+
   @Prop({ required: true, type: [Object] })
   tags: Record<any, any>[];
 }

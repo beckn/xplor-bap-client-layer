@@ -16,4 +16,6 @@ export default () => ({
   esPassword: process.env.ES_PASSWORD,
   kafkaClientId: process.env.KAFKA_CLIENT_ID,
   kafkaGroupId: process.env.KAFKA_GROUP_ID,
+  ilBaseUrl: process.env.IL_BASE_URL,
+  gclBaseUrl: process.env.GCL_BASE_URL,
 });

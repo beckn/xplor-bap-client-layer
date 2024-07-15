@@ -6,6 +6,7 @@ import { OrderDto } from '../dto/order-dump.dto';
 import { GetOrdersQueryDto } from '../../user/dto/get-orders-query.dto';
 import { RateOrderDto } from '../../user/dto/rate.order';
 import { OrderStatus } from '../../../common/constants/stg-constants';
+import { UpdateOrderDto } from '../dto/update-order.dto';
 
 @Injectable()
 export class OrderDumpService {
@@ -15,8 +16,17 @@ export class OrderDumpService {
     return await this.orderModel.create(createOrderDto);
   }
 
+  async upsertOrder(createOrderDto: OrderDto): Promise<Order> {
+    return await this.orderModel.findOneAndUpdate({ transaction_id: createOrderDto.transaction_id }, createOrderDto, {
+      upsert: true,
+    });
+  }
+
   async findAll(): Promise<Order[]> {
     return await this.orderModel.find();
+  }
+  async update(_id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    return this.orderModel.findByIdAndUpdate(_id, updateOrderDto, { new: true }).exec(); // The `{ new: true }` option returns the updated document.
   }
 
   async getStatus(transaction_id: string, user_id: string, item_id: string): Promise<Order[]> {
@@ -25,12 +35,15 @@ export class OrderDumpService {
   async updateOrder(order_id: string, key: object): Promise<Order> {
     return await this.orderModel.findOneAndUpdate({ order_id: order_id }, { $set: key }, { new: true }).exec();
   }
+  async updateByTransaction(transactionId: string, updateData: Partial<Order>): Promise<Order> {
+    return this.orderModel.findOneAndUpdate({ transaction_id: transactionId }, updateData, { new: true }).exec();
+  }
 
   async findByTransactionId(transaction_id: string): Promise<Order> {
     return await this.orderModel.findOneAndUpdate({ transaction_id });
   }
 
-  async findByKey(key: string, value: string): Promise<Order | Order[]> {
+  async findByKey(key: string, value: string): Promise<Order> {
     return await this.orderModel.findOne({ [key]: value });
   }
 

@@ -152,8 +152,8 @@ export class UserController {
   rateOrder(@Param('id') orderId: string, @ExtractToken() token: string, @Body() rateOrderRequest: RateOrderDto) {
     return this.userService.rateOrder(token, orderId, rateOrderRequest);
   }
-  @Patch('orders/:id/mark-add-to-wallet')
-  updatedIsAddedToWallet(@Param('id') orderId: string, @ExtractToken() token: string) {
+  @Patch('orders/mark-add-to-wallet')
+  updatedIsAddedToWallet(@Query('orderId') orderId: string) {
     return this.userService.updateIsAddedToWallet(orderId);
   }
 }

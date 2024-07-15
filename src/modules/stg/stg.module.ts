@@ -8,11 +8,19 @@ import { CommonModule } from '../../common/common.module';
 import { RequestPayloadUtilsService } from '../../common/utils/request-payload.utils.service';
 import { ResponsePayloadUtilsService } from '../../common/utils/response-payload.utils.service';
 import { TranslateService } from '../../services/translate/service/translate.service';
+import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
 
 @Module({
   imports: [DumpModule, CommonModule, KafkaModule],
   controllers: [StgController],
-  providers: [TranslateService, StgService, RequestPayloadUtilsService, AxiosService, ResponsePayloadUtilsService],
+  providers: [
+    TranslateService,
+    StgService,
+    RequestPayloadUtilsService,
+    AxiosService,
+    ResponsePayloadUtilsService,
+    PaymentGatewayService,
+  ],
   // ElasticsearchService, ElasticSearchService],
   exports: [StgService],
 })

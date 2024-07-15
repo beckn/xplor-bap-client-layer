@@ -8,7 +8,6 @@ export class ConfirmRequestDto {
 
   @IsNotEmpty({ message: 'domain should not be empty' })
   @IsString({ message: 'domain must be string' })
-  @IsEnum(DomainsEnum)
   domain: string;
 
   @IsNotEmpty({ message: 'item_id should not be empty' })

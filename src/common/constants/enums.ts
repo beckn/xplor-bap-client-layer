@@ -7,7 +7,8 @@ export enum DomainsEnum {
   COURSE_DOMAIN = 'onest:learning-experiences', // Domain for course-related services
   SCHOLARSHIP_DOMAIN = 'onest:financial-support', // Domain for scholarship-related services
   RETAIL_DOMAIN = 'ONDC:RET10', // Domain for retail-related services
-  BELEM = 'dsep-belem:courses',
+  BELEM = 'learning:dsep:belem',
+  DSEP_COURSES = 'dsep:courses',
 }
 
 /**
@@ -27,4 +28,13 @@ export enum Languages {
   PUNJABI = 'pa',
   PORTUGUESE = 'pt',
   SPANISH = 'es',
+}
+
+export enum RatingCategoryEnum {
+  Item = 'Item',
+  Order = 'Order',
+  Fulfillment = 'Fulfillment',
+  Provider = 'Provider',
+  Agent = 'Agent',
+  Support = 'Support',
 }
