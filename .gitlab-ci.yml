@@ -50,6 +50,6 @@ deploy-prod:
     - sshpass -p $XPLOR_PROD_PASSWORD ssh $Xplor_Username@$XPLOR_PROD_HOST "git clone -b main https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/'$CI_PROJECT_NAME'.git"
     - sshpass -p $XPLOR_PROD_PASSWORD scp .env $Xplor_Username@$XPLOR_PROD_HOST:/home/ubuntu/$CI_PROJECT_NAME
     - sshpass -p $XPLOR_PROD_PASSWORD ssh -tt $Xplor_Username@$XPLOR_PROD_HOST "
-        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose up -d --build "
+        cd /home/ubuntu/$CI_PROJECT_NAME && docker-compose -f docker-compose.production.yml up -d --build "
     - echo "https://implementation-layer-prod.thewitslab.com"
     
